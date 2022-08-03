@@ -904,18 +904,18 @@ class Form extends AbstractView {
     $markers = [];
     $errorMessage = '';
     foreach ($errors as $field => $types) {
-      if (is_array($this->settings['isErrorMarker.']) && isset($this->settings['isErrorMarker.'][$field])) {
+      if (isset($this->settings['isErrorMarker.']) && is_array($this->settings['isErrorMarker.']) && isset($this->settings['isErrorMarker.'][$field])) {
         $errorMessage = $this->utilityFuncs->getSingle($this->settings['isErrorMarker.'], $field);
       } elseif (strlen($temp = trim($this->utilityFuncs->getTranslatedMessage($this->langFiles, 'is_error_'.$field))) > 0) {
         $errorMessage = $temp;
-      } elseif (is_array($this->settings['isErrorMarker.']) && isset($this->settings['isErrorMarker.']['default'])) {
+      } elseif (isset($this->settings['isErrorMarker.']) && is_array($this->settings['isErrorMarker.']) && isset($this->settings['isErrorMarker.']['default'])) {
         $errorMessage = $this->utilityFuncs->getSingle($this->settings['isErrorMarker.'], 'default');
       } elseif (strlen($temp = trim($this->utilityFuncs->getTranslatedMessage($this->langFiles, 'is_error_default'))) > 0) {
         $errorMessage = $temp;
       }
       $markers['###is_error_'.$field.'###'] = $errorMessage;
     }
-    if (is_array($this->settings['isErrorMarker.']) && isset($this->settings['isErrorMarker.']['global'])) {
+    if (isset($this->settings['isErrorMarker.']) && is_array($this->settings['isErrorMarker.']) && isset($this->settings['isErrorMarker.']['global'])) {
       $errorMessage = $this->utilityFuncs->getSingle($this->settings['isErrorMarker.'], 'global');
     } elseif (strlen($temp = trim($this->utilityFuncs->getTranslatedMessage($this->langFiles, 'is_error'))) > 0) {
       $errorMessage = $temp;
