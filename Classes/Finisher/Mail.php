@@ -6,6 +6,7 @@ namespace Typoheads\Formhandler\Finisher;
 
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Typoheads\Formhandler\Domain\Model\MailResponse;
 use Typoheads\Formhandler\Generator\AbstractGenerator;
 use Typoheads\Formhandler\Mailer\TYPO3Mailer;
 use Typoheads\Formhandler\View\AbstractView;
@@ -518,7 +519,7 @@ class Mail extends AbstractFinisher {
    *
    * @param string $type (admin|user)
    */
-  protected function sendMail(string $type): bool {
+  protected function sendMail(string $type): MailResponse {
     $doSend = true;
     if (1 === (int) $this->utilityFuncs->getSingle($this->emailSettings, 'disable')) {
       $this->utilityFuncs->debugMessage('mail_disabled', [$type]);
@@ -713,6 +714,10 @@ class Mail extends AbstractFinisher {
       }
     }
 
-    return $sent;
+    $response = new MailResponse();
+    $response->setSent($sent);
+    $response->setRecipients($recipients);
+
+    return $response;
   }
 }
