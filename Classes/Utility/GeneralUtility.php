@@ -289,7 +289,7 @@ class GeneralUtility implements SingletonInterface {
     if (is_array($additionalParams)) {
       foreach ($additionalParams as $param => $value) {
         if (false === strpos($param, '.')) {
-          if (is_array($additionalParams[$param.'.'])) {
+          if (isset($additionalParams[$param.'.']) && is_array($additionalParams[$param.'.'])) {
             $value = self::getSingle($additionalParams, $param);
           }
           $addParams[$param] = $value;
