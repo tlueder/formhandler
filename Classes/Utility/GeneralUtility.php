@@ -339,7 +339,7 @@ class GeneralUtility implements SingletonInterface {
     if (strlen($redirectPage) > 0) {
       $correctRedirectUrl = (bool) self::getSingle($settings, 'correctRedirectUrl');
       $headerStatusCode = (string) self::getSingle($settings, 'headerStatusCode');
-      if (isset($settings['additionalParams'], $settings['additionalParams.'])) {
+      if (isset($settings['additionalParams'])) {
         $additionalParamsString = self::getSingle($settings, 'additionalParams');
         $additionalParamsKeysAndValues = explode('&', $additionalParamsString);
         $additionalParams = [];
