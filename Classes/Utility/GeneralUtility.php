@@ -348,8 +348,16 @@ class GeneralUtility implements SingletonInterface {
           $additionalParams[$key] = $value;
         }
       } else {
-        $additionalParams = (array) ($settings['additionalParams.'] ?? []);
+        $additionalParams = [];
+        foreach ((array) ($settings['additionalParams.'] ?? []) as $key => $value) {
+          if (isset($gp[$value])) {
+            $additionalParams[$key] = $gp[$value];
+          } else {
+            $additionalParams[$key] = $value;
+          }
+        }
       }
+
       self::doRedirect($redirectPage, $correctRedirectUrl, $additionalParams, $headerStatusCode);
 
       exit;
