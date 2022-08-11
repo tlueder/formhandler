@@ -289,7 +289,7 @@ class GeneralUtility implements SingletonInterface {
     if (is_array($additionalParams)) {
       foreach ($additionalParams as $param => $value) {
         if (false === strpos($param, '.')) {
-          if (is_array($additionalParams[$param.'.'])) {
+          if (isset($additionalParams[$param.'.']) && is_array($additionalParams[$param.'.'])) {
             $value = self::getSingle($additionalParams, $param);
           }
           $addParams[$param] = $value;
@@ -339,7 +339,7 @@ class GeneralUtility implements SingletonInterface {
     if (strlen($redirectPage) > 0) {
       $correctRedirectUrl = (bool) self::getSingle($settings, 'correctRedirectUrl');
       $headerStatusCode = (string) self::getSingle($settings, 'headerStatusCode');
-      if (isset($settings['additionalParams'], $settings['additionalParams.'])) {
+      if (isset($settings['additionalParams'])) {
         $additionalParamsString = self::getSingle($settings, 'additionalParams');
         $additionalParamsKeysAndValues = explode('&', $additionalParamsString);
         $additionalParams = [];
@@ -348,8 +348,16 @@ class GeneralUtility implements SingletonInterface {
           $additionalParams[$key] = $value;
         }
       } else {
-        $additionalParams = (array) ($settings['additionalParams.'] ?? []);
+        $additionalParams = [];
+        foreach ((array) ($settings['additionalParams.'] ?? []) as $key => $value) {
+          if (isset($gp[$value])) {
+            $additionalParams[$key] = $gp[$value];
+          } else {
+            $additionalParams[$key] = $value;
+          }
+        }
       }
+
       self::doRedirect($redirectPage, $correctRedirectUrl, $additionalParams, $headerStatusCode);
 
       exit;
