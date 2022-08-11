@@ -24,8 +24,6 @@ class FormInfo extends Form {
     echo json_encode($info);
 
     exit;
-
-    return '';
   }
 
   /**
@@ -78,8 +76,10 @@ class FormInfo extends Form {
    */
   private function getFinishers(): array {
     $finishers = [];
-    foreach ($this->settings['finishers.'] ?? [] as $finisher) {
-      $finishers[] = $finisher['class'];
+    foreach ((array) ($this->settings['finishers.'] ?? []) as $finisher) {
+      if (is_array($finisher)) {
+        $finishers[] = strval($finisher['class']);
+      }
     }
 
     return $finishers;
@@ -90,18 +90,26 @@ class FormInfo extends Form {
    */
   private function getValidators(): array {
     $validators = [];
-    foreach ($this->settings['validators.'] ?? [] as $validatorElement) {
+
+    /**
+     * @var array<string, array<string, mixed>|string> $validatorElement
+     */
+    foreach ((array) ($this->settings['validators.'] ?? []) as $validatorElement) {
       $validator = ['class' => $validatorElement['class'], 'fields' => []];
 
-      foreach ($validatorElement['config.']['fieldConf.'] ?? [] as $fieldName => $fieldConfig) {
+      /**
+       * @var array<string, array<string, mixed>|string> $fieldConfig
+       */
+      foreach ((array) ($validatorElement['config.']['fieldConf.'] ?? []) as $fieldName => $fieldConfig) {
         $config = ['field' => rtrim($fieldName, '.'), 'checks' => []];
 
-        foreach ($fieldConfig['errorCheck.'] ?? [] as $errorKey => $error) {
-          if (is_string($error)) {
-            $check = ['type' => $error];
-          } else {
+        foreach ((array) ($fieldConfig['errorCheck.'] ?? []) as $errorCheck) {
+          if (is_array($errorCheck)) {
+            /** @var array<string, string> $check */
             $check = array_pop($config['checks']);
-            $check = array_merge($check, $error);
+            $check = array_merge($check, $errorCheck);
+          } else {
+            $check = ['type' => strval($errorCheck)];
           }
 
           $config['checks'][] = $check;
