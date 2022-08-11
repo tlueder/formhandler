@@ -1,5 +1,7 @@
 <?php
 
+defined('TYPO3') or exit;
+
 $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes']['contains-formlogs'] = 'formhandler-foldericon';
 
 $GLOBALS['TCA']['pages']['columns']['module']['config']['items'][] = [
