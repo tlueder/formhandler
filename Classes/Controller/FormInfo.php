@@ -68,6 +68,16 @@ class FormInfo extends Form {
       ];
     }
 
+    // Find all textareas
+    foreach ($document->getElementsByTagName('textarea') as $textarea) {
+      $fields[] = [
+        'element' => 'textarea',
+        'value' => $textarea->getAttribute('value'),
+        'id' => $textarea->getAttribute('id'),
+        'name' => $textarea->getAttribute('name'),
+      ];
+    }
+
     return $fields;
   }
 
