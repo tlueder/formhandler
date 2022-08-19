@@ -1309,10 +1309,10 @@ class Form extends AbstractView {
         $conditions = (preg_split('/\s*(\|\||&&)\s*/i', $conditionString, -1, PREG_SPLIT_DELIM_CAPTURE) ?: []);
         $operator = null;
         $finalConditionResult = false;
+        $conditionResult = false;
         $count = 0;
 
         foreach ($conditions as $condition) {
-          $conditionResult = '';
           if ('||' === $condition || '&&' === $condition) {
             $operator = $condition;
           } else {
