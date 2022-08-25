@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Typoheads\Formhandler\Finisher;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Typoheads\Formhandler\Component\AbstractComponent;
-use Typoheads\Formhandler\Utility\GeneralUtility;
 
 /**
  * This script is part of the TYPO3 project - inspiring people to share!
