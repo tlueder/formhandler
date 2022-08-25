@@ -113,8 +113,9 @@ class Mail extends AbstractFinisher {
       $items = GeneralUtility::trimExplode($sep, $list, true);
       $splitArray = [];
       foreach ($items as $idx => $item) {
-        if (isset($this->gp[$item])) {
-          array_push($splitArray, $this->gp[$item]);
+        $gpVal = $this->getNestedGp($item);
+        if (null !== $gpVal) {
+          array_push($splitArray, $gpVal);
         } else {
           array_push($splitArray, $item);
         }
@@ -246,9 +247,11 @@ class Mail extends AbstractFinisher {
       $option = strval($option);
       $value = $this->utilityFuncs->pi_getFFvalue((array) ($this->cObj->data['pi_flexform'] ?? []), $option, $section);
       if (strlen($value) > 0) {
-        $emailSettings[$option] = $value;
-        if (isset($this->gp[$value])) {
-          $emailSettings[$option] = $this->gp[$value];
+        $gpVal = $this->getNestedGp($value);
+        if (null !== $gpVal) {
+          $emailSettings[$option] = $gpVal;
+        } else {
+          $emailSettings[$option] = $value;
         }
       } else {
         switch ($option) {
