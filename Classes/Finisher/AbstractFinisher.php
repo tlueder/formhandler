@@ -24,7 +24,7 @@ use Typoheads\Formhandler\Component\AbstractComponent;
  * Abstract class for Finisher Classes used by Formhandler.
  */
 abstract class AbstractFinisher extends AbstractComponent {
-  public function getNestedGp(string $pipeSeperatedField): ?string {
+  protected function getNestedGp(string $pipeSeperatedField): ?string {
     $arrayPath = GeneralUtility::trimExplode('|', $pipeSeperatedField, true);
     if (empty($arrayPath)) {
       return null;
