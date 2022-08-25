@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Typoheads\Formhandler\Finisher;
 
 use Typoheads\Formhandler\Component\AbstractComponent;
+use Typoheads\Formhandler\Utility\GeneralUtility;
 
 /**
  * This script is part of the TYPO3 project - inspiring people to share!
@@ -23,4 +24,22 @@ use Typoheads\Formhandler\Component\AbstractComponent;
  * Abstract class for Finisher Classes used by Formhandler.
  */
 abstract class AbstractFinisher extends AbstractComponent {
+  public function getNestedGp(string $pipeSeperatedField): ?string {
+    $arrayPath = GeneralUtility::trimExplode('|', $pipeSeperatedField, true);
+    if (empty($arrayPath)) {
+      return null;
+    }
+
+    $dest = $this->gp;
+    $finalKey = array_pop($arrayPath);
+    foreach ($arrayPath as $key) {
+      if (array_key_exists($key, $dest)) {
+        $dest = $dest[$key];
+      } else {
+        return null;
+      }
+    }
+
+    return $dest[$finalKey] ?? null;
+  }
 }

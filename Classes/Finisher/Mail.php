@@ -722,23 +722,4 @@ class Mail extends AbstractFinisher {
 
     return $response;
   }
-
-  private function getNestedGp(string $pipeSeperatedField): ?string {
-    $arrayPath = GeneralUtility::trimExplode('|', $pipeSeperatedField, true);
-    if (empty($arrayPath)) {
-      return null;
-    }
-
-    $dest = $this->gp;
-    $finalKey = array_pop($arrayPath);
-    foreach ($arrayPath as $key) {
-      if (array_key_exists($key, $dest)) {
-        $dest = $dest[$key];
-      } else {
-        return null;
-      }
-    }
-
-    return $dest[$finalKey] ?? null;
-  }
 }
