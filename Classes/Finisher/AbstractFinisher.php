@@ -33,7 +33,7 @@ abstract class AbstractFinisher extends AbstractComponent {
     $dest = $this->gp;
     $finalKey = array_pop($arrayPath);
     foreach ($arrayPath as $key) {
-      if (array_key_exists($key, $dest)) {
+      if (is_array($dest) && array_key_exists($key, $dest)) {
         $dest = $dest[$key];
       } else {
         return null;
