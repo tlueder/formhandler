@@ -33,7 +33,7 @@ class File extends AbstractGenerator {
     if (1 == intval($this->settings['storeInTempFile'])) {
       $this->outputPath = $this->utilityFuncs->getDocumentRoot();
       if ($this->settings['customTempOutputPath']) {
-        $this->outputPath .= $this->utilityFuncs->sanitizePath(strval($this->settings['customTempOutputPath'] ?? ''));
+        $this->outputPath .= $this->utilityFuncs->sanitizePath(strval($this->settings['customTempOutputPath']));
       } else {
         $this->outputPath .= '/typo3temp/';
       }
