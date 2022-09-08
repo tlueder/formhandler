@@ -743,7 +743,7 @@ class Form extends AbstractController {
         unset($finisherConf['actions.']);
         $object->init($params, $finisherConf);
         $content = strval($object->process());
-      } elseif (1 === (int) $this->utilityFuncs->getSingle($finisherConf['actions.'][$action.'.']['config.'], 'returns')) {
+      } elseif (isset($finisherConf['actions.'][$action.'.']['config.']) && 1 === (int) $this->utilityFuncs->getSingle($finisherConf['actions.'][$action.'.']['config.'], 'returns')) {
         $class = $this->utilityFuncs->getPreparedClassName($finisherConf['actions.'][$action.'.']);
         if ($class) {
           // Makes it possible to make your own Generator class show output
