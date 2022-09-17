@@ -293,10 +293,6 @@ class Form extends AbstractView {
       $markers['###total_uploadedfiles###'] = $markers['###total_uploadedFiles###'];
     }
 
-    $requiredSign = $this->utilityFuncs->getSingle($settings, 'requiredSign');
-    if (0 === strlen($requiredSign)) {
-      $requiredSign = '*';
-    }
     $markers['###required###'] = $requiredSign;
     $markers['###REQUIRED###'] = $markers['###required###'];
   }
