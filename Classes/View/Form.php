@@ -127,86 +127,21 @@ class Form extends AbstractView {
               $disableErrorCheckFields = GeneralUtility::trimExplode(',', $validatorSettings['config.']['disableErrorCheckFields']);
             }
             if (is_array($validatorSettings['config.']) && is_array($validatorSettings['config.']['fieldConf.'])) {
-              foreach ($validatorSettings['config.']['fieldConf.'] as $fieldname => $fieldSettings) {
-                $replacedFieldname = str_replace('.', '', $fieldname);
-                if (is_array($fieldSettings['errorCheck.'] ?? null)) {
-                  foreach ($fieldSettings['errorCheck.'] as $key => $check) {
-                    switch ($check) {
-                      case 'fileMinSize':
-                        $minSize = $fieldSettings['errorCheck.'][$key.'.']['minSize'];
-                        $markers['###'.$replacedFieldname.'_minSize###'] = GeneralUtility::formatSize($minSize, ' Bytes| KB| MB| GB');
-
-                        break;
-
-                      case 'fileMaxSize':
-                        $maxSize = $fieldSettings['errorCheck.'][$key.'.']['maxSize'];
-                        $markers['###'.$replacedFieldname.'_maxSize###'] = GeneralUtility::formatSize($maxSize, ' Bytes| KB| MB| GB');
-
-                        break;
-
-                      case 'fileAllowedTypes':
-                        $types = $fieldSettings['errorCheck.'][$key.'.']['allowedTypes'];
-                        $markers['###'.$replacedFieldname.'_allowedTypes###'] = $types;
-
-                        break;
-
-                      case 'fileMaxCount':
-                        $maxCount = $fieldSettings['errorCheck.'][$key.'.']['maxCount'];
-                        $markers['###'.$replacedFieldname.'_maxCount###'] = $maxCount;
-
-                        if (is_array($sessionFiles[$replacedFieldname])) {
-                          $fileCount = count($sessionFiles[$replacedFieldname]);
-                        } else {
-                          $fileCount = 0;
-                        }
-                        $markers['###'.$replacedFieldname.'_fileCount###'] = $fileCount;
-
-                        $remaining = $maxCount - $fileCount;
-                        $markers['###'.$replacedFieldname.'_remainingCount###'] = $remaining;
-
-                        break;
-
-                      case 'fileMinCount':
-                        $minCount = $fieldSettings['errorCheck.'][$key.'.']['minCount'];
-                        $markers['###'.$replacedFieldname.'_minCount###'] = $minCount;
-
-                        break;
-
-                      case 'fileMaxTotalSize':
-                        $maxTotalSize = $fieldSettings['errorCheck.'][$key.'.']['maxTotalSize'];
-                        $markers['###'.$replacedFieldname.'_maxTotalSize###'] = GeneralUtility::formatSize($maxTotalSize, ' Bytes| KB| MB| GB');
-                        $totalSize = 0;
-                        if (is_array($sessionFiles[$replacedFieldname])) {
-                          foreach ($sessionFiles[$replacedFieldname] as $file) {
-                            $totalSize += (int) $file['size'];
-                          }
-                        }
-                        $markers['###'.$replacedFieldname.'_currentTotalSize###'] = GeneralUtility::formatSize($totalSize, ' Bytes| KB| MB| GB');
-                        $markers['###'.$replacedFieldname.'_remainingTotalSize###'] = GeneralUtility::formatSize($maxTotalSize - $totalSize, ' Bytes| KB| MB| GB');
-
-                        break;
-
-                      case 'required':
-                      case 'fileRequired':
-                      case 'jmRecaptcha':
-                      case 'captcha':
-                      case 'srFreecap':
-                      case 'mathGuard':
-                        if (!in_array('all', $disableErrorCheckFields) && !in_array($replacedFieldname, $disableErrorCheckFields)) {
-                          $markers['###required_'.$replacedFieldname.'###'] = $requiredSign;
-                          $markers['###requiredMarker_'.$replacedFieldname.'###'] = $requiredMarker;
-                        }
-
-                        break;
-                    }
-                  }
-                }
-              }
+              $markers = $this->setMarkerRecursive(
+                $markers,
+                (array) $validatorSettings['config.']['fieldConf.'],
+                '',
+                $requiredSign,
+                $requiredMarker,
+                $disableErrorCheckFields,
+                $sessionFiles,
+              );
             }
           }
         }
       }
     }
+
     if (is_array($sessionFiles)) {
       $singleFileMarkerTemplate = (array) ($settings['singleFileMarkerTemplate.'] ?? []);
       $totalFilesMarkerTemplate = (array) ($settings['totalFilesMarkerTemplate.'] ?? []);
@@ -1259,6 +1194,127 @@ class Form extends AbstractView {
       }
     }
     $this->template = $this->markerBasedTemplateService->substituteMarkerArray($this->template, $fieldMarkers);
+  }
+
+  /**
+   * @param array<string, mixed> $markers
+   * @param array<string, mixed> $fieldConfig
+   * @param array<string>        $disableErrorCheckFields
+   * @param array<string, mixed> $sessionFiles
+   *
+   * @return array<string, mixed>
+   */
+  protected function setMarkerRecursive(
+    array $markers,
+    array $fieldConfig,
+    string $fieldPath = '',
+    string $requiredSign = '*',
+    string $requiredMarker = '',
+    array $disableErrorCheckFields = [],
+    array $sessionFiles = [],
+  ): array {
+    foreach ($fieldConfig as $key => $fieldSettings) {
+      $fieldName = trim($key, '.');
+      if ('fieldArray' != $fieldName) {
+        $fieldPathTemp = !empty($fieldPath) ? $fieldPath.'_'.$fieldName : $fieldName;
+      } else {
+        $fieldPathTemp = !empty($fieldPath) ? $fieldPath : '';
+      }
+
+      if (is_array($fieldSettings)) {
+        $tempSettings = $fieldSettings;
+        unset($tempSettings['errorCheck.']);
+        if (count($tempSettings)) {
+          $markersTemp = $this->setMarkerRecursive(
+            [],
+            $tempSettings,
+            $fieldPathTemp,
+            $requiredSign,
+            $requiredMarker,
+            $disableErrorCheckFields,
+            $sessionFiles
+          );
+          $markers = array_merge($markersTemp, $markers);
+        }
+
+        if (!is_array($fieldSettings['errorCheck.'] ?? null)) {
+          continue;
+        }
+
+        foreach ($fieldSettings['errorCheck.'] as $key => $check) {
+          switch ($check) {
+            case 'fileMinSize':
+              $minSize = $fieldSettings['errorCheck.'][$key.'.']['minSize'];
+              $markers['###'.$fieldPathTemp.'_minSize###'] = GeneralUtility::formatSize($minSize, ' Bytes| KB| MB| GB');
+
+              break;
+
+            case 'fileMaxSize':
+              $maxSize = $fieldSettings['errorCheck.'][$key.'.']['maxSize'];
+              $markers['###'.$fieldPathTemp.'_maxSize###'] = GeneralUtility::formatSize($maxSize, ' Bytes| KB| MB| GB');
+
+              break;
+
+            case 'fileAllowedTypes':
+              $types = $fieldSettings['errorCheck.'][$key.'.']['allowedTypes'];
+              $markers['###'.$fieldPathTemp.'_allowedTypes###'] = $types;
+
+              break;
+
+            case 'fileMaxCount':
+              $maxCount = $fieldSettings['errorCheck.'][$key.'.']['maxCount'];
+              $markers['###'.$fieldPathTemp.'_maxCount###'] = $maxCount;
+
+              if (is_array($sessionFiles[$fieldName])) {
+                $fileCount = count($sessionFiles[$fieldName]);
+              } else {
+                $fileCount = 0;
+              }
+              $markers['###'.$fieldPathTemp.'_fileCount###'] = $fileCount;
+
+              $remaining = $maxCount - $fileCount;
+              $markers['###'.$fieldPathTemp.'_remainingCount###'] = $remaining;
+
+              break;
+
+            case 'fileMinCount':
+              $minCount = $fieldSettings['errorCheck.'][$key.'.']['minCount'];
+              $markers['###'.$fieldPathTemp.'_minCount###'] = $minCount;
+
+              break;
+
+            case 'fileMaxTotalSize':
+              $maxTotalSize = $fieldSettings['errorCheck.'][$key.'.']['maxTotalSize'];
+              $markers['###'.$fieldPathTemp.'_maxTotalSize###'] = GeneralUtility::formatSize($maxTotalSize, ' Bytes| KB| MB| GB');
+              $totalSize = 0;
+              if (is_array($sessionFiles[$fieldName])) {
+                foreach ($sessionFiles[$fieldName] as $file) {
+                  $totalSize += (int) $file['size'];
+                }
+              }
+              $markers['###'.$fieldPathTemp.'_currentTotalSize###'] = GeneralUtility::formatSize($totalSize, ' Bytes| KB| MB| GB');
+              $markers['###'.$fieldPathTemp.'_remainingTotalSize###'] = GeneralUtility::formatSize($maxTotalSize - $totalSize, ' Bytes| KB| MB| GB');
+
+              break;
+
+            case 'required':
+            case 'fileRequired':
+            case 'jmRecaptcha':
+            case 'captcha':
+            case 'srFreecap':
+            case 'mathGuard':
+              if (!in_array('all', $disableErrorCheckFields) && !in_array($fieldName, $disableErrorCheckFields)) {
+                $markers['###required_'.$fieldPathTemp.'###'] = $requiredSign;
+                $markers['###requiredMarker_'.$fieldPathTemp.'###'] = $requiredMarker;
+              }
+
+              break;
+          }
+        }
+      }
+    }
+
+    return $markers;
   }
 
   /**
