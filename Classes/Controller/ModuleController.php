@@ -112,11 +112,9 @@ class ModuleController extends ActionController {
   public function indexAction(Demand $demand = null, int $page = null): ResponseInterface {
     if (null === $demand) {
       $demand = GeneralUtility::makeInstance(Demand::class);
-
-      if (is_array($this->gp['demand'] ?? false) && !isset($this->gp['demand']['pid'])) {
-        $demand->setPid($this->id);
-      }
+      $demand->setPid($this->id);
     }
+
     if (null !== $page) {
       $demand->setPage($page);
     }
