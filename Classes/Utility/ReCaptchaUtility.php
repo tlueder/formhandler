@@ -37,7 +37,7 @@ class ReCaptchaUtility implements SingletonInterface {
     return '';
   }
 
-  private function addJs(string $sitekey) {
+  private function addJs(string $sitekey): void {
     $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="module" src="/typo3conf/ext/formhandler/Resources/Public/JavaScript/ReCaptcha.js"></script>';
   }
 }

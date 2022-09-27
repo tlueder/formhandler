@@ -9,7 +9,6 @@ use ReCaptcha\ReCaptcha as GoogleRecaptcha;
 use ReCaptcha\Response;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Validates a ReCaptcha token.
@@ -37,18 +36,10 @@ class ReCaptcha extends AbstractErrorCheck {
     /** @var array<string, mixed> $params */
     $params = $this->settings['params'];
     $this->expectedAction = $this->utilityFuncs->getSingle($params, 'action') ?: $this->expectedAction;
-    $this->scoreThreshold = $this->utilityFuncs->getSingle($params, 'threshold') ?: $this->scoreThreshold;
-
-    DebuggerUtility::var_dump($this->expectedAction);
+    $this->scoreThreshold = floatval($this->utilityFuncs->getSingle($params, 'threshold')) ?: $this->scoreThreshold;
 
     /** @var Response $resp */
     $resp = $recapcha->setExpectedAction($this->expectedAction)->setScoreThreshold($this->scoreThreshold)->verify(strval($this->gp['ReCaptcha']));
-
-    DebuggerUtility::var_dump($resp);
-    DebuggerUtility::var_dump($this->gp);
-    DebuggerUtility::var_dump($this->gp['ReCaptcha']);
-
-    exit;
 
     if (!$resp->isSuccess()) {
       return $this->getCheckFailed();
