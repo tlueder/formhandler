@@ -10,7 +10,8 @@ export class ReCaptchaSubmit {
 
     this.containerList.forEach((container) => {
       this.siteKey = String(
-        (<HTMLInputElement>container.querySelector('#ReCaptchaField'))?.dataset.sitekey
+        (<HTMLInputElement>container.querySelector('#ReCaptchaField'))?.dataset
+          .sitekey
       );
 
       if (!this.siteKey) {
@@ -22,10 +23,11 @@ export class ReCaptchaSubmit {
   }
 
   private handler = (e: Event) => {
-    console.log('triggered!');
     e.preventDefault();
     const target = e.target as HTMLFormElement;
-    const captchaField = target.querySelector('#ReCaptchaField') as HTMLInputElement;
+    const captchaField = target.querySelector(
+      '#ReCaptchaField'
+    ) as HTMLInputElement;
 
     load(this.siteKey).then((recaptcha) => {
       recaptcha.execute('submit').then((token) => {
