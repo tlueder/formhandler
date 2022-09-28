@@ -462,7 +462,7 @@ class Form extends AbstractView {
 
       $markers = array_merge($markers, GeneralUtility::makeInstance(PiBaseApi::class)->makeCaptcha());
     }
-    if (stristr($this->template, '###recaptcha###')) {
+    if (stristr($this->template, '###recaptcha###') && class_exists(\ReCaptcha\ReCaptcha::class)) {
       $recaptchaUtil = GeneralUtility::makeInstance(ReCaptchaUtility::class);
       $markers['###RECAPTCHA###'] = $recaptchaUtil->makeCaptcha();
       $markers['###recaptcha###'] = $markers['###RECAPTCHA###'];
