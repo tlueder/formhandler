@@ -37,7 +37,7 @@ class ReCaptcha extends AbstractErrorCheck {
     $recapcha = GeneralUtility::makeInstance(GoogleRecaptcha::class, $privkey);
 
     /** @var array<string, mixed> $params */
-    $params = $this->settings['params'];
+    $params = $this->settings['params'] ?? [];
     $this->expectedAction = $this->utilityFuncs->getSingle($params, 'action') ?: $this->expectedAction;
     $this->scoreThreshold = floatval($this->utilityFuncs->getSingle($params, 'threshold')) ?: $this->scoreThreshold;
 
