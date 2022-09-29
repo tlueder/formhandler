@@ -53,7 +53,7 @@ class CaptchaUtility implements SingletonInterface {
     $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="module" src="/typo3conf/ext/formhandler/Resources/Public/JavaScript/ReCaptcha.js"></script>';
   }
 
-  private function addTurnstileJs() {
+  private function addTurnstileJs(): void {
     $GLOBALS['TSFE']->additionalHeaderData[] = '<script id="turnstilScript" src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
     $GLOBALS['TSFE']->additionalFooterData[] = '<script type="module" src="/typo3conf/ext/formhandler/Resources/Public/JavaScript/Turnstile.js"></script>';
   }

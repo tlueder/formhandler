@@ -7,7 +7,6 @@ namespace Typoheads\Formhandler\Validator\ErrorCheck;
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Validates a Cloudflare Turnstile token.
@@ -22,13 +21,11 @@ class TurnstileCaptcha extends AbstractErrorCheck {
     }
 
     // recaptcha field does not exist
-    if (!isset($this->gp['Turnstile'])) {
+    if (!isset($this->gp['Turnstile']) || !is_string($this->gp['Turnstile'])) {
       return $this->getCheckFailed();
     }
 
     if (!$this->makeCaptchaRequest($privkey, $this->gp['Turnstile'])) {
-      DebuggerUtility::var_dump('failed!');
-
       return $this->getCheckFailed();
     }
 
@@ -57,12 +54,12 @@ class TurnstileCaptcha extends AbstractErrorCheck {
 
     $resp = curl_exec($curl_request);
 
-    if (false === $resp) {
-      return $resp;
+    if (is_bool($resp)) {
+      return false;
     }
 
-    $responseJson = json_decode($resp);
-    if (true === $responseJson->success) {
+    $responseJson = json_decode($resp, true);
+    if (is_array($responseJson) && true === $responseJson['success']) {
       return true;
     }
 
