@@ -112,13 +112,21 @@
         <source>Considered as SPAM</source>
         <target>Als SPAM erkannt</target>
       </trans-unit>
-      <trans-unit id="configuration.captcha.sitekey" resname="configuration.captcha.sitekey">
+      <trans-unit id="configuration.recaptcha.sitekey" resname="configuration.recaptcha.sitekey">
         <source>ReCaptcha sitekey</source>
         <target>Recaptcha Websitenschlüssel</target>
       </trans-unit>
-      <trans-unit id="configuration.captcha.privkey" resname="configuration.captcha.privkey">
+      <trans-unit id="configuration.recaptcha.privkey" resname="configuration.recaptcha.privkey">
         <source>ReCaptcha privatekey</source>
         <target>Recaptcha Geheimschlüssel</target>
+      </trans-unit>
+      <trans-unit id="configuration.turnstile.sitekey" resname="configuration.turnstile.sitekey">
+        <source>Cloudflare Turnstile sitekey</source>
+        <target>Cloudflare Turnstile Websitenschlüssel</target>
+      </trans-unit>
+      <trans-unit id="configuration.turnstile.privkey" resname="configuration.turnstile.privkey">
+        <source>Cloudflare Turnstile privatekey</source>
+        <target>Cloudflare Turnstile Geheimschlüssel</target>
       </trans-unit>
     </body>
   </file>
