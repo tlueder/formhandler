@@ -10,7 +10,7 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use Typoheads\Formhandler\Utility\ReCaptchaUtility;
+use Typoheads\Formhandler\Utility\CaptchaUtility;
 
 /**
  * This script is part of the TYPO3 project - inspiring people to share!
@@ -463,9 +463,14 @@ class Form extends AbstractView {
       $markers = array_merge($markers, GeneralUtility::makeInstance(PiBaseApi::class)->makeCaptcha());
     }
     if (stristr($this->template, '###recaptcha###') && class_exists(\ReCaptcha\ReCaptcha::class)) {
-      $recaptchaUtil = GeneralUtility::makeInstance(ReCaptchaUtility::class);
-      $markers['###RECAPTCHA###'] = $recaptchaUtil->makeCaptcha();
+      $recaptchaUtil = GeneralUtility::makeInstance(CaptchaUtility::class);
+      $markers['###RECAPTCHA###'] = $recaptchaUtil->makeReCaptcha();
       $markers['###recaptcha###'] = $markers['###RECAPTCHA###'];
+    }
+    if (stristr($this->template, '###TURNSTILE###')) {
+      $recaptchaUtil = GeneralUtility::makeInstance(CaptchaUtility::class);
+      $markers['###TURNSTILE###'] = $recaptchaUtil->makeTurnstile();
+      $markers['###turnstile###'] = $markers['###TURNSTILE###'];
     }
   }
 
