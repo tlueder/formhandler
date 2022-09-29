@@ -1,6 +1,3 @@
-// tslint:disable-next-line
-import { turnstile } from './definitions/turnstile';
-
 document.addEventListener('DOMContentLoaded', () => {
   const submitButton = document.querySelector(
     "[type='submit']"
@@ -13,8 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     turnstile.render(div, {
       sitekey: sitekey,
-      callback: function (token: string) {
-        console.log(token);
+      callback: function () {
+        const captchaDiv = div.querySelector('input') as HTMLInputElement;
+        captchaDiv.setAttribute('name', 'formhandler[Turnstil]');
       },
       theme: 'light',
     });

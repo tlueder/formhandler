@@ -1,13 +1,15 @@
-declare global {
-  const turnstile: turnstile;
-}
-
-export interface turnstile {
-  render: (container: string | Element, parameters: IRenderParameters) => void;
-}
-
-export declare interface IRenderParameters {
+declare interface RenderParameters {
   sitekey: string;
   callback?: (token: string) => void;
   theme?: string;
+}
+declare class turnstile {
+  static render: (
+    container: string | Element,
+    parameters: RenderParameters
+  ) => string;
+
+  static getResponse: (widgetId: string) => void;
+
+  static reset: (widgetId: string) => void;
 }
