@@ -464,8 +464,13 @@ class Form extends AbstractView {
     }
     if (stristr($this->template, '###recaptcha###') && class_exists(\ReCaptcha\ReCaptcha::class)) {
       $recaptchaUtil = GeneralUtility::makeInstance(ReCaptchaUtility::class);
-      $markers['###RECAPTCHA###'] = $recaptchaUtil->makeCaptcha();
+      $markers['###RECAPTCHA###'] = $recaptchaUtil->makeReCaptcha();
       $markers['###recaptcha###'] = $markers['###RECAPTCHA###'];
+    }
+    if (stristr($this->template, '###TURNSTILE###')) {
+      $recaptchaUtil = GeneralUtility::makeInstance(ReCaptchaUtility::class);
+      $markers['###TURNSTILE###'] = $recaptchaUtil->makeTurnstile();
+      $markers['###turnstile###'] = $markers['###TURNSTILE###'];
     }
   }
 
