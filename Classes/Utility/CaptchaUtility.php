@@ -24,12 +24,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * A PDF Template class for Formhandler generated PDF files for usage with Generator_TCPDF.
  */
-class ReCaptchaUtility implements SingletonInterface {
-  public function makeCaptcha(): string {
+class CaptchaUtility implements SingletonInterface {
+  public function makeReCaptcha(): string {
     $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('formhandler');
     if (is_array($extensionConfiguration) && is_array($extensionConfiguration['recaptcha']) && !empty($extensionConfiguration['recaptcha']['sitekey'])) {
       $sitekey = $extensionConfiguration['recaptcha']['sitekey'];
-      $this->addJs($sitekey);
+      $this->addRecaptchaJs($sitekey);
 
       return '<input name="formhandler[ReCaptcha]" type="hidden" id="ReCaptchaField" data-siteKey="'.$sitekey.'" />';
     }
@@ -37,7 +37,24 @@ class ReCaptchaUtility implements SingletonInterface {
     return '';
   }
 
-  private function addJs(string $sitekey): void {
+  public function makeTurnstile(): string {
+    $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('formhandler');
+    if (is_array($extensionConfiguration) && is_array($extensionConfiguration['turnstile']) && !empty($extensionConfiguration['turnstile']['sitekey'])) {
+      $sitekey = $extensionConfiguration['turnstile']['sitekey'];
+      $this->addTurnstileJs();
+
+      return '<div id="turnstileDiv" data-siteKey="'.$sitekey.'"></div>';
+    }
+
+    return '';
+  }
+
+  private function addRecaptchaJs(string $sitekey): void {
     $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="module" src="/typo3conf/ext/formhandler/Resources/Public/JavaScript/ReCaptcha.js"></script>';
+  }
+
+  private function addTurnstileJs() {
+    $GLOBALS['TSFE']->additionalHeaderData[] = '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
+    $GLOBALS['TSFE']->additionalFooterData[] = '<script type="module" src="/typo3conf/ext/formhandler/Resources/Public/JavaScript/Turnstile.js"></script>';
   }
 }
