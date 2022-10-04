@@ -1,6 +1,6 @@
 export class TurnstileForm {
-  constructor(container: NodeListOf<HTMLFormElement>) {
-    container.forEach((container) => {
+  constructor(containerList: NodeListOf<HTMLFormElement>) {
+    containerList.forEach((container) => {
       const captchaDiv = container.querySelector(
         '#turnstileDiv'
       ) as HTMLDivElement;
@@ -10,18 +10,27 @@ export class TurnstileForm {
         return;
       }
 
-      this.initCaptcha(captchaDiv, sitekey);
+      const formId = container.getAttribute('id') ?? 'default';
+
+      this.initCaptcha(captchaDiv, sitekey, formId);
     });
   }
 
-  private initCaptcha(captchaDiv: HTMLElement, sitekey: string) {
-    turnstile.render(captchaDiv, {
+  private initCaptcha(
+    captchaDiv: HTMLElement,
+    sitekey: string,
+    formId: string
+  ) {
+    const widgetId = turnstile.render(captchaDiv, {
       sitekey: sitekey,
-      callback: function () {
+      action: formId,
+      callback: () => {
         const captchaInput = captchaDiv.querySelector(
           'input'
         ) as HTMLInputElement;
         captchaInput.setAttribute('name', 'formhandler[Turnstile]');
+
+        setTimeout(() => turnstile.reset(widgetId), 300000);
       },
       theme: 'light',
     });
