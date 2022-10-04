@@ -2,6 +2,7 @@ declare interface RenderParameters {
   sitekey: string;
   callback?: (token: string) => void;
   theme?: string;
+  action?: string;
 }
 declare class turnstile {
   static render: (
