@@ -11,15 +11,18 @@ export class TurnstileForm {
       }
 
       const formId = container.getAttribute('id') ?? 'default';
+      const formValuePrefix =
+        captchaDiv.dataset.formvalueprefix ?? 'formhandler';
 
-      this.initCaptcha(captchaDiv, sitekey, formId);
+      this.initCaptcha(captchaDiv, sitekey, formId, formValuePrefix);
     });
   }
 
   private initCaptcha(
     captchaDiv: HTMLElement,
     sitekey: string,
-    formId: string
+    formId: string,
+    formValuePrefix: string
   ) {
     const widgetId = turnstile.render(captchaDiv, {
       sitekey: sitekey,
@@ -28,7 +31,7 @@ export class TurnstileForm {
         const captchaInput = captchaDiv.querySelector(
           'input'
         ) as HTMLInputElement;
-        captchaInput.setAttribute('name', 'formhandler[Turnstile]');
+        captchaInput.setAttribute('name', `${formValuePrefix}[Turnstile]`);
 
         setTimeout(() => turnstile.reset(widgetId), 300000);
       },
