@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Typoheads\Formhandler\View;
 
 use SJBR\SrFreecap\PiBaseApi;
-use ThinkopenAt\Captcha\Utility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -453,10 +452,6 @@ class Form extends AbstractView {
    * @param array<string, mixed> &$markers Reference to the markers array
    */
   protected function fillCaptchaMarkers(array &$markers): void {
-    if (stristr($this->template, '###CAPTCHA###') && ExtensionManagementUtility::isLoaded('captcha')) {
-      $markers['###CAPTCHA###'] = Utility::makeCaptcha();
-      $markers['###captcha###'] = $markers['###CAPTCHA###'];
-    }
     if (stristr($this->template, '###SR_FREECAP_IMAGE###') && ExtensionManagementUtility::isLoaded('sr_freecap')) {
       require_once ExtensionManagementUtility::extPath('sr_freecap').'pi2/class.tx_srfreecap_pi2.php';
 
@@ -1302,8 +1297,6 @@ class Form extends AbstractView {
 
             case 'required':
             case 'fileRequired':
-            case 'jmRecaptcha':
-            case 'captcha':
             case 'srFreecap':
             case 'mathGuard':
               if (!in_array('all', $disableErrorCheckFields) && !in_array($fieldName, $disableErrorCheckFields)) {

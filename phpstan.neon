@@ -23,7 +23,6 @@ parameters:
     - %currentWorkingDirectory%/ext_tables.php
 
   scanFiles:
-    - public/typo3conf/ext/jm_recaptcha/class.tx_jmrecaptcha.php
     - public/typo3conf/ext/formhandler/vendor/parsecsv/php-parsecsv/parsecsv.lib.php
 
   excludePaths:
