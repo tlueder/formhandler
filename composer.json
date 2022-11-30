@@ -6,14 +6,6 @@
   "license": "GPL-2.0-or-later",
   "repositories": [
     {
-      "type": "github",
-      "url": "https://github.com/einpraegsam/captcha.git"
-    },
-    {
-      "type": "github",
-      "url": "https://github.com/mblaschke/TYPO3-jm-recaptcha.git"
-    },
-    {
       "type": "git",
       "url": "https://github.com/tlueder/phpstan-typo3.git"
     }
@@ -29,7 +21,6 @@
   },
   "require-dev": {
     "typo3/cms-backend": "^11.5",
-    "thinkopenat/captcha": "^2.0",
     "symfony/mailer": "^5.3",
     "phpstan/phpstan": "^1.3",
     "saschaegerer/phpstan-typo3": "dev-prerelease",
