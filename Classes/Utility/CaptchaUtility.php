@@ -25,31 +25,31 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * A PDF Template class for Formhandler generated PDF files for usage with Generator_TCPDF.
  */
 class CaptchaUtility implements SingletonInterface {
-  public function makeReCaptcha(): string {
+  public function makeReCaptcha(string $formValuePrefix): string {
     $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('formhandler');
     if (is_array($extensionConfiguration) && is_array($extensionConfiguration['recaptcha']) && !empty($extensionConfiguration['recaptcha']['sitekey'])) {
       $sitekey = $extensionConfiguration['recaptcha']['sitekey'];
-      $this->addRecaptchaJs($sitekey);
+      $this->addRecaptchaJs();
 
-      return '<input name="formhandler[ReCaptcha]" type="hidden" id="ReCaptchaField" data-siteKey="'.$sitekey.'" />';
+      return '<input name="'.$formValuePrefix.'[ReCaptcha]" type="hidden" id="ReCaptchaField" data-siteKey="'.$sitekey.'" />';
     }
 
     return '';
   }
 
-  public function makeTurnstile(): string {
+  public function makeTurnstile(string $formValuePrefix): string {
     $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('formhandler');
     if (is_array($extensionConfiguration) && is_array($extensionConfiguration['turnstile']) && !empty($extensionConfiguration['turnstile']['sitekey'])) {
       $sitekey = $extensionConfiguration['turnstile']['sitekey'];
       $this->addTurnstileJs();
 
-      return '<div id="turnstileDiv" data-siteKey="'.$sitekey.'"></div>';
+      return '<div id="turnstileDiv" data-formValuePrefix="'.$formValuePrefix.'" data-siteKey="'.$sitekey.'"></div>';
     }
 
     return '';
   }
 
-  private function addRecaptchaJs(string $sitekey): void {
+  private function addRecaptchaJs(): void {
     $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="module" src="/typo3conf/ext/formhandler/Resources/Public/JavaScript/ReCaptcha.js"></script>';
   }
 
