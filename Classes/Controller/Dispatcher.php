@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Typoheads\Formhandler\Controller;
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
@@ -114,12 +115,12 @@ class Dispatcher extends AbstractPlugin {
       $result = $controller->process();
     } catch (\Exception $e) {
       $settings = $this->globals->getSettings();
-      if (isset($settings['debug']) && (bool) $settings['debug']) {
+      if (Environment::getContext()->isDevelopment() || (isset($settings['debug']) && (bool) $settings['debug'])) {
         DebuggerUtility::var_dump($e);
       }
 
       GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__)->error(
-        $e->getFile().'('.$e->getLine().')'.' '.$e->getMessage(),
+        $e->getFile().'('.$e->getLine().') '.$e->getMessage(),
         ['formhandler']
       );
 
