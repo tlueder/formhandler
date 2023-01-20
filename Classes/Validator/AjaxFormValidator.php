@@ -11,14 +11,20 @@ use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
 class AjaxFormValidator extends AbstractValidator {
   private string $formValuesPrefix = '';
 
-  public function loadConfig(): void {
+  public function loadConfig(): bool {
     $tsConfig = $this->utilityFuncs->parseConditionsBlock((array) ($this->globals->getSession()?->get('settings') ?? []), $this->gp);
+    if (empty($tsConfig)) {
+      return false;
+    }
+
     $this->formValuesPrefix = strval($tsConfig['formValuesPrefix'] ?? '');
     $this->settings = [];
     $this->validators = (array) ($tsConfig['validators.'] ?? []);
     if ($tsConfig['ajax.']) {
       $this->settings['ajax.'] = $tsConfig['ajax.'];
     }
+
+    return true;
   }
 
   public function validate(array &$errors): bool {
@@ -31,7 +37,12 @@ class AjaxFormValidator extends AbstractValidator {
 
   public function validateAjaxForm(array $gp, array &$errors): bool {
     $this->gp = $gp;
-    $this->loadConfig();
+
+    // If loading is not successful, stop here
+    if (!$this->loadConfig()) {
+      return false;
+    }
+
     if ($this->validators) {
       foreach ($this->validators as $idx => $settings) {
         if (is_array($settings) && is_array($settings['config.'] ?? null)) {
