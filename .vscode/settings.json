@@ -70,5 +70,35 @@
   "prettier.configPath": "./.vscode/.prettierrc",
   "stylelint.snippet": ["css", "less", "postcss", "scss"],
   "stylelint.validate": ["css", "html", "javascript", "javascriptreact", "less", "markdown", "postcss", "sass", "scss", "source.css.styled", "source.markdown.math", "styled-css", "sugarss", "svelte", "typescript", "typescriptreact", "vue", "vue-html", "vue-postcss", "xml", "xsl"],
-  "xmlTools.enforcePrettySelfClosingTagOnFormat": true
+  "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
+  "cSpell.words": ["Extbase", "Formhandler", "JAKOTA", "Typoheads"],
+  "statusbar_command.commands": [
+    {
+      "text": "$(beaker) TS",
+      "tooltip": "Lint: Typoscript",
+      "id": "lintTyposcript",
+      "name": "lintTyposcript",
+      "command": "workbench.action.terminal.sendSequence",
+      "arguments": [{ "text": "./vendor/bin/typoscript-lint -c ./.vscode/.typoscript-lint.yml\u000D" }],
+      "priority": -4
+    },
+    {
+      "text": "$(beaker) PHP",
+      "tooltip": "Analyse code with PHPStan",
+      "id": "pHPStan",
+      "name": "pHPStan",
+      "command": "workbench.action.terminal.sendSequence",
+      "arguments": [{ "text": "php -d memory_limit=512M vendor/bin/phpstan analyse -c phpstan.neon\u000D" }],
+      "priority": -5
+    },
+    {
+      "text": "$(git-branch) $(trash)",
+      "tooltip": "Git: Clean up local branches",
+      "id": "gitCleanUp",
+      "name": "gitCleanUp",
+      "command": "workbench.action.terminal.sendSequence",
+      "arguments": [{ "text": "git for-each-ref --format '%(refname:short)' refs/heads | grep -v \"master\\|main\\|develop\\|stage\" | grep -v $(git branch --show-current) | xargs git branch -D\u000D" }],
+      "priority": -6
+    }
+  ]
 }
