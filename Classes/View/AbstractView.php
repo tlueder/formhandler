@@ -28,6 +28,7 @@ use Typoheads\Formhandler\Utility\Globals;
  * An abstract view for Formhandler.
  */
 abstract class AbstractView extends AbstractPlugin {
+
   /**
    * The Formhandler component manager.
    */
@@ -103,6 +104,7 @@ abstract class AbstractView extends AbstractPlugin {
     $this->utilityFuncs = $utilityFuncs;
     $this->cObj = $this->globals->getCObj();
     $this->markerBasedTemplateService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
+    $this->prefixId = $this->globals->getPrefixId();
     $this->pi_loadLL();
     $this->initializeView();
   }
