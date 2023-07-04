@@ -1,11 +1,13 @@
 <?php
 
-// Copyright JAKOTA Design Group GmbH. All rights reserved.
 declare(strict_types=1);
 
+use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
+use Typoheads\Formhandler\Definitions\FormhandlerExtensionConfig;
+
 return [
-  'formhandler-foldericon' => [
-    'provider' => \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
-    'source' => 'EXT:formhandler/Resources/Public/Images/pagetreeicon.png',
+  'formhandler' => [
+    'provider' => SvgIconProvider::class,
+    'source' => 'EXT:'.FormhandlerExtensionConfig::EXTENSION_KEY.'/Resources/Public/Icons/Extension.svg',
   ],
 ];

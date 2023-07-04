@@ -1,0 +1,307 @@
+plugin.tx_formhandler_form.settings.predefinedForms.devExample {
+  formId = DevExampleForm
+  formName = Dev Example Form
+  formValuesPrefix = DevExampleForm
+  langFileDefault = locallang_example_form.xlf
+  templateForm = 
+  templateMailHtml = DevExample/MailHtml
+  templateMailText = DevExample/MailText
+
+  preProcessors {
+    setSalutations {
+      model = SetSelectOptionsPreProcessorModel
+      config {
+        name = salutation
+        options {
+          mr {
+            value = mr
+            title = Mr.
+          }
+          mrs {
+            value = mrs
+            title = Mrs.
+          }
+        }
+      }
+    }
+    setCountry {
+      model = SetSelectOptionsPreProcessorModel
+      config {
+        name = country
+        options {
+          DE {
+            value = DE
+            title = Germany
+          }
+          USA {
+            value = USA
+            title = United States of America
+          }
+        }
+      }
+    }
+  }
+
+  debuggers {
+    VarDumpDebugger {
+      model = VarDumpDebuggerModel
+      config {
+        active = true
+        maxDepth = 20
+      }
+    }
+  }
+
+  loggers {
+    Database {
+      model = DatabaseLoggerModel
+    }
+  }
+
+  steps {
+    1 {
+      templateForm = DevExampleForm/DevExampleHTMLStep1
+      validators {
+        DefaultValidator {
+          model = DefaultValidatorModel
+          config {
+            messageLimit = 1
+            messageLimits {
+              1.customer.email = 2
+            }
+            fields {
+              customer.fields {
+                salutation.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                }
+                firstname.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 20
+                  }
+                }
+                lastname.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 20
+                  }
+                }
+                streetAddress.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                }
+                postalCode.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                }
+                city.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 70
+                  }
+                }
+                country.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                }
+                telephone.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 20
+                  }
+                }
+                email.errorChecks {
+                  required {
+                    model = RequiredModel
+                  }
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 50
+                  }
+                  email {
+                    model = EmailModel
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    2 {
+      templateForm = DevExampleForm/DevExampleHTMLStep2
+      validators {
+        DefaultValidator {
+          model = DefaultValidatorModel
+          config {
+            fields {
+
+              booking.fields {
+                cabins {
+                  fieldArray = true
+                  fields {
+                    persons {
+                      fieldArray = true
+                      fields {
+                        salutation.errorCheck {
+                          required {
+                            model = RequiredModel
+                          }
+                        }
+
+                        firstname.errorCheck {
+                          required {
+                            model = RequiredModel
+                          }
+                          maxLength {
+                            model = MaxLengthModel
+                            maxLength = 255
+                          }
+                        }
+
+                        lastname.errorCheck {
+                          required {
+                            model = RequiredModel
+                          }
+                          maxLength {
+                            model = MaxLengthModel
+                            maxLength = 255
+                          }
+                        }
+                      }
+                    }
+                  }
+                  errorCheck {
+                    required {
+                      model = RequiredModel
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    3 {
+      templateForm = DevExampleForm/DevExampleHTMLStep3
+      validators {
+        DefaultValidator {
+          model = DefaultValidatorModel
+          config {
+            fields {
+              payment.fields.direct.fields {
+                salutation.errorCheck {
+                  required {
+                    model = RequiredModel
+                  }
+                }
+
+                firstname.errorCheck {
+                  required {
+                    model = RequiredModel
+                  }
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 255
+                  }
+                }
+
+                lastname.errorCheck {
+                  required {
+                    model = RequiredModel
+                  }
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 255
+                  }
+                }
+
+                country.errorCheck {
+                  required {
+                    model = RequiredModel
+                  }
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 255
+                  }
+                }
+
+                email.errorCheck {
+                  maxLength {
+                    model = MaxLengthModel
+                    maxLength = 255
+                  }
+                  email {
+                    model = EmailModel
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    4 {
+      templateForm = DevExampleForm/DevExampleHTMLStep4
+      validators {
+        DefaultValidator {
+          model = DefaultValidatorModel
+          config {
+            fields {
+              message.errorChecks {
+                required {
+                  model = RequiredModel
+                }
+              }
+
+              privacy_policy.errorChecks {
+                required {
+                  model = RequiredModel
+                }
+                containsOne {
+                  model = ContainsOneModel
+                  words = Yes,Ja
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  finishers {
+    Mail {
+      model = MailFinisherModel
+    }    
+    Redirect {
+      model = RedirectFinisherModel
+      config {
+        returns = true
+        correctRedirectUrl = false
+        additionalParams {
+          postal_code = 1.customer.postalCode
+          queryParam2 = valueIfNotFoundAsFieldName
+        }
+      }
+    }
+  }
+}

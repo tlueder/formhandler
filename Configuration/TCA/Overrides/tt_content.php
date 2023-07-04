@@ -1,32 +1,30 @@
 <?php
 
+use Typoheads\Formhandler\Definitions\FormhandlerExtensionConfig;
+
 defined('TYPO3') or exit;
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin(
-  [
-    'LLL:EXT:formhandler/Resources/Private/Language/locallang_db.xlf:tt_content.list_type_pi1',
-    'formhandler_pi1',
-  ],
-  'CType',
-  'formhandler'
-);
+call_user_func(static function (): void {
+  $contentTypeName = \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+    FormhandlerExtensionConfig::EXTENSION_KEY,
+    FormhandlerExtensionConfig::EXTENSION_PLUGIN_NAME,
+    'LLL:EXT:'.FormhandlerExtensionConfig::EXTENSION_KEY.'/Resources/Private/Language/locallang_mod.xlf:mlang_labels_tablabel',
+    'formhandler',
+    'forms'
+  );
 
-$GLOBALS['TCA']['tt_content']['types']['formhandler_pi1']['showitem'] = '
-  --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.general;general,
-  --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.header;header,
-  --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.plugin,pi_flexform,
-  --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
-  --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.visibility;visibility,
-  --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,
-  --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.appearance,
-  --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames,
-  --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.behaviour,
-  --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.extended
-';
+  // Add the FlexForm
+  \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+    '*',
+    'FILE:EXT:'.FormhandlerExtensionConfig::EXTENSION_KEY.'/Configuration/FlexForms/Form.xml',
+    $contentTypeName
+  );
 
-$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['formhandler_pi1'] = 'pi_flexform';
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-  '*',
-  'FILE:EXT:formhandler/Configuration/FlexForms/flexform_ds.xml',
-  'formhandler_pi1'
-);
+  // Add the FlexForm to the show item list
+  \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+    'tt_content',
+    '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.plugin, pi_flexform',
+    $contentTypeName,
+    'after:palette:headers'
+  );
+});

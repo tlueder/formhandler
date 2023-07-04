@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Typoheads\Formhandler\TcaFormElement;
 
-use TYPO3\CMS\Core\TypoScript\ExtendedTemplateService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\RootlineUtility;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use Typoheads\Formhandler\Definitions\FormhandlerExtensionConfig;
 
 /**
  * This script is part of the TYPO3 project - inspiring people to share!
@@ -21,26 +21,31 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-class PredefinedForm {
+class PredefinedForm implements SingletonInterface {
+  public function __construct(
+    private readonly BackendConfigurationManager $backendConfigurationManager
+  ) {
+  }
+
   /**
    * Add predefined forms item list.
    *
    * @param array<string, mixed> &$params
    */
   public function addItems(array &$params): void {
-    $ts = $this->loadTS(intval(((array) ($params['flexParentDatabaseRow'] ?? []))['pid'] ?? 0));
-    $items = (array) ($params['items'] ?? []);
+    $ts = $this->backendConfigurationManager->getTypoScriptSetup();
+    $params['items'] = (array) ($params['items'] ?? []);
 
     // Check if forms are available
     if (
       !isset($ts['plugin.']) || !is_array($ts['plugin.'])
-      || !isset($ts['plugin.']['tx_formhandler_pi1.']) || !is_array($ts['plugin.']['tx_formhandler_pi1.'])
-      || !isset($ts['plugin.']['tx_formhandler_pi1.']['settings.']) || !is_array($ts['plugin.']['tx_formhandler_pi1.']['settings.'])
-      || !isset($ts['plugin.']['tx_formhandler_pi1.']['settings.']['predef.']) || !is_array($ts['plugin.']['tx_formhandler_pi1.']['settings.']['predef.'])
-      || 0 === count($ts['plugin.']['tx_formhandler_pi1.']['settings.']['predef.'])
+      || !isset($ts['plugin.'][FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'.']) || !is_array($ts['plugin.'][FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'.'])
+      || !isset($ts['plugin.'][FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'.']['settings.']) || !is_array($ts['plugin.'][FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'.']['settings.'])
+      || !isset($ts['plugin.'][FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'.']['settings.']['predefinedForms.']) || !is_array($ts['plugin.'][FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'.']['settings.']['predefinedForms.'])
+      || 0 === count($ts['plugin.'][FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'.']['settings.']['predefinedForms.'])
     ) {
-      $items[] = [
-        0 => LocalizationUtility::translate('LLL:EXT:formhandler/Resources/Private/Language/locallang_db.xlf:be_missing_config'),
+      $params['items'][] = [
+        0 => LocalizationUtility::translate('LLL:EXT:'.FormhandlerExtensionConfig::EXTENSION_KEY.'/Resources/Private/Language/locallang_flexform.xlf:template_predefined_missing_config'),
         1 => '',
       ];
 
@@ -50,27 +55,29 @@ class PredefinedForm {
     $predef = [];
 
     // Parse all forms
-    foreach ($ts['plugin.']['tx_formhandler_pi1.']['settings.']['predef.'] as $key => $form) {
+    foreach ($ts['plugin.'][FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'.']['settings.']['predefinedForms.'] as $key => $form) {
       // Check if form has a name
-      if (!is_array($form) || !isset($form['name'])) {
+      if (!is_array($form) || !isset($form['formName']) || !is_string($form['formName'])) {
         continue;
       }
 
-      $beName = $form['name'];
+      $key = rtrim($key, '.');
+      $formName = $form['formName'];
 
       // Check if form name can be translated
-      $data = explode(':', $form['name']);
+      $data = explode(':', $formName);
       if ('lll' === strtolower($data[0])) {
         array_shift($data);
         $langFileAndKey = implode(':', $data);
-        $beName = LocalizationUtility::translate('LLL:'.$langFileAndKey);
+        $formName = LocalizationUtility::translate('LLL:'.$langFileAndKey) ?? $formName;
       }
-      $predef[] = [$beName, $key];
+
+      $predef[] = [$formName, $key];
     }
 
     if (0 == count($predef)) {
-      $items[] = [
-        0 => LocalizationUtility::translate('LLL:EXT:formhandler/Resources/Private/Language/locallang_db.xlf:be_missing_config'),
+      $params['items'][] = [
+        0 => LocalizationUtility::translate('LLL:EXT:'.FormhandlerExtensionConfig::EXTENSION_KEY.'/Resources/Private/Language/locallang_flexform.xlf:template_predefined_missing_config'),
         1 => '',
       ];
 
@@ -78,28 +85,12 @@ class PredefinedForm {
     }
 
     // Add label
-    $items[] = [
-      0 => LocalizationUtility::translate('LLL:EXT:formhandler/Resources/Private/Language/locallang_db.xlf:be_please_select'),
+    $params['items'][] = [
+      0 => LocalizationUtility::translate('LLL:EXT:'.FormhandlerExtensionConfig::EXTENSION_KEY.'/Resources/Private/Language/locallang_flexform.xlf:template_predefined_please_select'),
       1 => '',
     ];
 
     // add to list
-    $params['items'] = array_merge($items, $predef);
-  }
-
-  /**
-   * Loads the TypoScript for the given page id.
-   *
-   * @return array<string, mixed> The TypoScript setup
-   */
-  private function loadTS(int $pageUid): array {
-    $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $pageUid)->get();
-
-    $TSObj = GeneralUtility::makeInstance(ExtendedTemplateService::class);
-    $TSObj->tt_track = false;
-    $TSObj->runThroughTemplates($rootLine);
-    $TSObj->generateConfig();
-
-    return $TSObj->setup;
+    $params['items'] = array_merge($params['items'], $predef);
   }
 }

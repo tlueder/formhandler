@@ -3,20 +3,17 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
-    public: true
+    public: false
 
   Typoheads\Formhandler\:
     resource: '../Classes/*'
     exclude: '../Classes/Domain/Model/*'
 
-  Typoheads\Formhandler\Controller\Content:
-    arguments:
-      $content: ''
+  cache.formhandler_cache:
+    class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+    factory: ['@TYPO3\CMS\Core\Cache\CacheManager', 'getCache']
+    arguments: ['formhandler_cache']
 
-  Typoheads\Formhandler\TcaFormElement\PredefinedJs:
+  Typoheads\Formhandler\Session\Typo3Session:
     arguments:
-      $data: []
-
-  Typoheads\Formhandler\TcaFormElement\SubmittedValues:
-    arguments:
-      $data: []
+      $cache: '@cache.formhandler_cache'

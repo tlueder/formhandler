@@ -1,0 +1,12 @@
+{
+  "StartFolder": "Classes",
+  "DocumentationFolder": "Documentation",
+  "DocumentationType": "html",
+  "Favicon": "_static/favicon.svg",
+  "Project": "Formhandler",
+  "Copyright": "2023, JAKOTA Design Group GmbH",
+  "Author": "JAKOTA Design Group GmbH",
+  "Release": "9.0.0 (Alpha)",
+  "StaticFolder": "_static",
+  "TemplatesFolder": ""
+}

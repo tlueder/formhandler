@@ -1,55 +1,34 @@
 <?php
 
-use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
-use TYPO3\CMS\Core\Log\LogLevel;
-use TYPO3\CMS\Core\Log\Writer\SyslogWriter;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Typoheads\Formhandler\TcaFormElement\PredefinedJs;
-use Typoheads\Formhandler\TcaFormElement\SubmittedValues;
+declare(strict_types=1);
 
-if (!defined('TYPO3')) {
-  exit('Access denied.');
-}
+use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use Typoheads\Formhandler\Controller\FormController;
+use Typoheads\Formhandler\Definitions\FormhandlerExtensionConfig;
 
-ExtensionManagementUtility::addPItoST43('formhandler', 'pi1/class.tx_formhandler_pi1.php', '_pi1', 'CType', false);
+defined('TYPO3') or exit;
 
-// Hook in tslib_content->stdWrap
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_content.php']['stdWrap']['formhandler'] = 'Typoheads\Formhandler\Hooks\StdWrapHook';
-
-// load default PageTS config from static file
-ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:formhandler/Configuration/TypoScript/pageTsConfig.typoscript">');
-
-if (!isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['TYPO3\\CMS\\Scheduler\\Task\\TableGarbageCollectionTask']['options']['tables']['tx_formhandler_log'])) {
-  $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['TYPO3\\CMS\\Scheduler\\Task\\TableGarbageCollectionTask']['options']['tables']['tx_formhandler_log'] = [
-    'dateField' => 'tstamp',
-    'expirePeriod' => 180,
-  ];
-}
-
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1638437365] = [
-  'nodeName' => 'predefinedJs',
-  'priority' => 40,
-  'class' => PredefinedJs::class,
-];
-
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1638582370] = [
-  'nodeName' => 'submittedValues',
-  'priority' => 40,
-  'class' => SubmittedValues::class,
-];
-
-GeneralUtility::makeInstance(IconRegistry::class)->registerIcon(
-  'formhandler-foldericon',
-  BitmapIconProvider::class,
-  ['source' => 'EXT:formhandler/Resources/Public/Images/pagetreeicon.png']
-);
-
-if (!isset($GLOBALS['TYPO3_CONF_VARS']['LOG']['Typoheads']['Formhandler']['writerConfiguration'])) {
-  $GLOBALS['TYPO3_CONF_VARS']['LOG']['Typoheads']['Formhandler']['writerConfiguration'] = [
-    LogLevel::ERROR => [
-      SyslogWriter::class => [],
+call_user_func(static function (): void {
+  ExtensionUtility::configurePlugin(
+    FormhandlerExtensionConfig::EXTENSION_KEY,
+    FormhandlerExtensionConfig::EXTENSION_PLUGIN_NAME,
+    [
+      FormController::class => 'form',
     ],
-  ];
-}
+    [
+      FormController::class => 'form',
+    ],
+    ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+  );
+
+  // Cache registration
+  $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['formhandler_cache'] ??= [];
+  $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['formhandler_cache']['backend'] ??= SimpleFileBackend::class;
+
+  $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = FormhandlerExtensionConfig::EXTENSION_KEY.'[randomId]';
+  $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = FormhandlerExtensionConfig::EXTENSION_KEY.'[step]';
+
+  // Register "formhandler:" namespace
+  $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['namespaces']['formhandler'][] = 'Typoheads\\Formhandler\\ViewHelpers';
+});

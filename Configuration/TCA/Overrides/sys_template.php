@@ -1,9 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Typoheads\Formhandler\Definitions\FormhandlerExtensionConfig;
+
 defined('TYPO3') or exit;
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-  'formhandler',
-  'Configuration/TypoScript/Json',
-  'Activate JSON Output (optional)'
-);
+call_user_func(static function (): void {
+  ExtensionManagementUtility::addStaticFile(
+    FormhandlerExtensionConfig::EXTENSION_KEY,
+    'Configuration/TypoScript',
+    FormhandlerExtensionConfig::EXTENSION_TITLE
+  );
+
+  ExtensionManagementUtility::addStaticFile(
+    FormhandlerExtensionConfig::EXTENSION_KEY,
+    'Configuration/TypoScript/Example',
+    FormhandlerExtensionConfig::EXTENSION_TITLE.' Example Form (for dev only)'
+  );
+});

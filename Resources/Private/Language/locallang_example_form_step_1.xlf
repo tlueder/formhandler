@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2"
+  xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="EXT:formhandler/Resources/Private/Language/locallang_example_form.xlf" date="2023-06-22T11:48:40Z" product-name="formhandler">
+    <header />
+    <body>
+      <trans-unit id="1.customer.salutation" resname="1.customer.salutation">
+        <source>Salutation</source>
+      </trans-unit>
+      <trans-unit id="1.customer.salutation_title" resname="1.customer.salutation_title">
+        <source>choose your salutation here</source>
+      </trans-unit>
+      <trans-unit id="1.customer.salutation_placeholder" resname="1.customer.salutation_placeholder">
+        <source>Salutation</source>
+      </trans-unit>
+      <trans-unit id="1.customer.salutation_choose" resname="1.customer.salutation_choose">
+        <source>Please choose</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.salutation_Required" resname="error_1.customer.salutation_Required">
+        <source>You forgot to choose a salutation.</source>
+      </trans-unit>
+
+      <trans-unit id="1.customer.firstname" resname="1.customer.firstname">
+        <source>First Name</source>
+      </trans-unit>
+      <trans-unit id="1.customer.firstname_title" resname="1.customer.firstname_title">
+        <source>Enter your first name</source>
+      </trans-unit>
+      <trans-unit id="1.customer.firstname_placeholder" resname="1.customer.firstname_placeholder">
+        <source>First Name</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.firstname_Required" resname="error_1.customer.firstname_Required">
+        <source>Please enter your first name.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.firstname_MaxLength" resname="error_1.customer.firstname_MaxLength">
+        <source>First name is to long. Max. 255 Chars please.</source>
+      </trans-unit>
+
+      <trans-unit id="1.customer.lastname" resname="1.customer.lastname">
+        <source>Last Name</source>
+      </trans-unit>
+      <trans-unit id="1.customer.lastname_title" resname="1.customer.lastname_title">
+        <source>Enter your last name</source>
+      </trans-unit>
+      <trans-unit id="1.customer.lastname_placeholder" resname="1.customer.lastname_placeholder">
+        <source>Last Name</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.lastname_Required" resname="error_1.customer.lastname_Required">
+        <source>Please enter your last name.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.lastname_MaxLength" resname="error_1.customer.lastname_MaxLength">
+        <source>Last name is to long. Max. 255 Chars please.</source>
+      </trans-unit>
+
+      <trans-unit id="1.customer.streetAddress" resname="1.customer.streetAddress">
+        <source>Street Address</source>
+      </trans-unit>
+      <trans-unit id="1.customer.streetAddress_title" resname="1.customer.streetAddress_title">
+        <source>Enter your street address here</source>
+      </trans-unit>
+      <trans-unit id="1.customer.streetAddress_placeholder" resname="1.customer.streetAddress_placeholder">
+        <source>Street Address</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.streetAddress_Required" resname="error_1.customer.streetAddress_Required">
+        <source>You forgot to type in your street adress.</source>
+      </trans-unit>
+
+      <trans-unit id="1.customer.postalCode" resname="1.customer.postalCode">
+        <source>Postal Code</source>
+      </trans-unit>
+      <trans-unit id="1.customer.postalCode_title" resname="1.customer.postalCode_title">
+        <source>Please enter a postal code</source>
+      </trans-unit>
+      <trans-unit id="1.customer.postalCode_placeholder" resname="1.customer.postalCode_placeholder">
+        <source>Postal Code</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.postalCode_Required" resname="error_1.customer.postalCode_Required">
+        <source>You forgot to type in a postal code.</source>
+      </trans-unit>
+
+      <trans-unit id="1.customer.city" resname="1.customer.city">
+        <source>City</source>
+      </trans-unit>
+      <trans-unit id="1.customer.city_title" resname="1.customer.city_title">
+        <source>Please enter the location in which you live or work</source>
+      </trans-unit>
+      <trans-unit id="1.customer.city_placeholder" resname="1.customer.city_placeholder">
+        <source>City</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.city_Required" resname="error_1.customer.city_Required">
+        <source>You forgot to type in a city.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.city_MaxLength" resname="error_1.customer.city_MaxLength">
+        <source>City is to long. Max. 70 Chars please.</source>
+      </trans-unit>
+
+      <trans-unit id="1.customer.country" resname="1.customer.country">
+        <source>Country</source>
+      </trans-unit>
+      <trans-unit id="1.customer.country_title" resname="1.customer.country_title">
+        <source>Please enter the country that you are living in</source>
+      </trans-unit>
+      <trans-unit id="1.customer.country_placeholder" resname="1.customer.country_placeholder">
+        <source>Country</source>
+      </trans-unit>
+      <trans-unit id="1.customer.country_choose" resname="1.customer.country_choose">
+        <source>Please choose</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.country_Required" resname="error_1.customer.country_Required">
+        <source>You forgot to type in the country in that you are living/working.</source>
+      </trans-unit>
+      <trans-unit id="1.customer.country_search_placeholder" resname="1.customer.country_search_placeholder">
+        <source>Search countries...</source>
+      </trans-unit>
+
+      <trans-unit id="1.customer.telephone" resname="1.customer.telephone">
+        <source>Phone number</source>
+      </trans-unit>
+      <trans-unit id="1.customer.telephone_title" resname="1.customer.telephone_title">
+        <source>Here you can specify a phone number if desired</source>
+      </trans-unit>
+      <trans-unit id="1.customer.telephone_placeholder" resname="1.customer.telephone_placeholder">
+        <source>Phone number</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.telephone_Required" resname="error_1.customer.telephone_Required">
+        <source>You forgot to type in a telephone-number.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.telephone_MaxLength" resname="error_1.customer.telephone_MaxLength">
+        <source>Telephone-Nmber is to long. Max. 20 Chars please.</source>
+      </trans-unit>
+
+      <trans-unit id="1.customer.email" resname="1.customer.email">
+        <source>Email</source>
+      </trans-unit>
+      <trans-unit id="1.customer.email_title" resname="1.customer.email_title">
+        <source>Please enter your email address so we can write back</source>
+      </trans-unit>
+      <trans-unit id="1.customer.email_placeholder" resname="1.customer.email_placeholder">
+        <source>Email</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.email_Required" resname="error_1.customer.email_Required">
+        <source>You forgot to type in an email-address.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.email_MaxLength" resname="error_1.customer.email_MaxLength">
+        <source>Your email-address is to long. Max. 50 Chars please.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.email_Email" resname="error_1.customer.email_Email">
+        <source>Please type in a valid email-address.</source>
+      </trans-unit>
+
+      <trans-unit id="step1Submit" resname="step1Submit">
+        <source>Submit</source>
+      </trans-unit>
+      <trans-unit id="step1SubmitTitle" resname="step1SubmitTitle">
+        <source>Submit customer data</source>
+      </trans-unit>
+
+    </body>
+  </file>
+</xliff>

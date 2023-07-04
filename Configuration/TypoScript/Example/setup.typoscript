@@ -1,0 +1,2 @@
+@import 'EXT:formhandler/Configuration/TypoScript/Example/HTML/*.typoscript'
+@import 'EXT:formhandler/Configuration/TypoScript/Example/Headless/*.typoscript'
