@@ -26,6 +26,23 @@ use Typoheads\Formhandler\Debugger\VarDumpDebugger;
  *   * - **TypoScript Path**
  *     - plugin.tx_formhandler_form.settings.predefinedForms.[x].debuggers.VarDumpDebugger
  *
+ *..  code-block:: typoscript
+ *
+ *    Example Code:
+ *
+ *    plugin.tx_formhandler_form.settings.predefinedForms.devExample {
+ *      debuggers {
+ *        VarDumpDebugger {
+ *          model = VarDumpDebuggerModel
+ *          config {
+ *            active = true
+ *            maxDepth = 20
+ *          }
+ *        }
+ *      }
+ *    }
+ *
+ *
  ***Properties**
  *
  *.. list-table::
@@ -197,8 +214,8 @@ class VarDumpDebuggerModel extends AbstractDebuggerModel {
    * @param array<string, mixed> $config
    */
   public function __construct(array $config) {
-    $this->active = boolval($config['active'] ?? false);
-    $this->ansiColors = boolval($config['ansiColors'] ?? true);
+    $this->active = filter_var($config['active'] ?? false, FILTER_VALIDATE_BOOLEAN);
+    $this->ansiColors = filter_var($config['ansiColors'] ?? true, FILTER_VALIDATE_BOOLEAN);
 
     if (isset($config['blacklistedClassNames']) && is_array($config['blacklistedClassNames'])) {
       $this->blacklistedClassNames = $config['blacklistedClassNames'];
@@ -213,8 +230,8 @@ class VarDumpDebuggerModel extends AbstractDebuggerModel {
     }
 
     $this->maxDepth = intval($config['maxDepth'] ?? 8);
-    $this->plainText = boolval($config['plainText'] ?? false);
-    $this->return = boolval($config['return'] ?? false);
+    $this->plainText = filter_var($config['plainText'], FILTER_VALIDATE_BOOLEAN);
+    $this->return = filter_var($config['return'], FILTER_VALIDATE_BOOLEAN);
 
     if (isset($config['title'])) {
       $this->title = strval($config['title']);
