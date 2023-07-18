@@ -12,18 +12,17 @@ declare(strict_types=1);
 
 namespace Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
+use Typoheads\Formhandler\Validator\ErrorCheck\LengthMax;
 
-/** Documentation:Start:ErrorChecks/Strings/ContainsOne.rst.
+/** Documentation:Start:ErrorChecks/Strings/LengthMax.rst.
  *
- *.. _containsone:
+ *.. _lengthmax:
  *
- *===========
- *ContainsOne
- *===========
+ *=========
+ *LengthMax
+ *=========
  *
- *Checks if a field contains at least one of the configured values
+ *Checks if the value of a field has less than the configured length
  *
  *..  code-block:: typoscript
  *
@@ -34,10 +33,10 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *        model = DefaultValidatorModel
  *        config {
  *          fields {
- *            privacy_policy.errorChecks {
- *              containsOne {
- *                model = ContainsOneModel
- *                values = Yes,Ja
+ *            post-code.errorChecks {
+ *              lengthMax {
+ *                model = LengthMaxModel
+ *                lengthMax = 7
  *              }
  *            }
  *          }
@@ -54,16 +53,16 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *   :header-rows: 0
  *   :stub-columns: 0
  *
- *   * - **values**
- *     - Comma separated list of values of which one must be the value of a given field
+ *   * - **lengthMax**
+ *     - Sets the max string length a field value can be.
  *   * -
  *     -
  *   * - *Mandatory*
  *     - False
  *   * - *Data Type*
- *     - String
+ *     - Integer
  *   * - *Default*
- *     - Empty String
+ *     - 0
  *
  *.. toctree::
  *   :maxdepth: 2
@@ -71,19 +70,18 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *
  *Documentation:End
  */
-class ContainsOneModel extends AbstractErrorCheckModel {
-  /** @var string[] */
-  public readonly array $values;
+class LengthMaxModel extends AbstractErrorCheckModel {
+  public readonly int $lengthMax;
 
   /**
    * @param array<string, mixed> $settings
    */
   public function __construct(array $settings) {
-    $this->name = 'ContainsOne';
-    $this->values = GeneralUtility::trimExplode(',', strval($settings['values'] ?? ''));
+    $this->name = 'LengthMax';
+    $this->lengthMax = intval($settings['lengthMax'] ?? 0);
   }
 
   public function class(): string {
-    return ContainsOne::class;
+    return LengthMax::class;
   }
 }

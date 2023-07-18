@@ -14,22 +14,21 @@ namespace Typoheads\Formhandler\Validator\ErrorCheck;
 
 use Typoheads\Formhandler\Domain\Model\Config\FormModel;
 use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\AbstractErrorCheckModel;
-use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\MaxLengthModel;
+use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\PregMatchModel;
 
-class MaxLength extends AbstractErrorCheck {
-  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$maxLengthErrorCheckConfig, mixed $value): bool {
-    if (!$maxLengthErrorCheckConfig instanceof MaxLengthModel) {
+class PregMatch extends AbstractErrorCheck {
+  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$pregMatchErrorCheckConfig, mixed $value): bool {
+    if (!$pregMatchErrorCheckConfig instanceof PregMatchModel) {
       return false;
     }
 
     if (is_string($value)
-        && mb_strlen(trim($value), 'utf-8') > 0
-        && $maxLengthErrorCheckConfig->maxLength > 0
-        && mb_strlen(trim($value), 'utf-8') > $maxLengthErrorCheckConfig->maxLength
+        && !empty($pregMatchErrorCheckConfig->pattern)
+        && (false !== preg_match($pregMatchErrorCheckConfig->pattern, $value))
     ) {
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   }
 }

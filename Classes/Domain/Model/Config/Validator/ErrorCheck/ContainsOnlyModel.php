@@ -12,17 +12,18 @@ declare(strict_types=1);
 
 namespace Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck;
 
-use Typoheads\Formhandler\Validator\ErrorCheck\MaxLength;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOnly;
 
-/** Documentation:Start:ErrorChecks/Strings/MaxLength.rst.
+/** Documentation:Start:ErrorChecks/Strings/ContainsOnly.rst.
  *
- *.. _maxlength:
+ *.. _containsonly:
  *
- *=========
- *MaxLength
- *=========
+ *============
+ *ContainsOnly
+ *============
  *
- *Checks if the value of a field has less than the configured length
+ *Checks if a field contains only the configured characters.
  *
  *..  code-block:: typoscript
  *
@@ -33,10 +34,10 @@ use Typoheads\Formhandler\Validator\ErrorCheck\MaxLength;
  *        model = DefaultValidatorModel
  *        config {
  *          fields {
- *            post-code.errorChecks {
- *              maxLength {
- *                model = MaxLengthModel
- *                maxLength = 7
+ *            password.errorChecks {
+ *              containsOnly {
+ *                model = ContainsOnlyModel
+ *                characters = a,b,c,d,e,f,g,h,i,j,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,1,2,3,4,5,6,7,8,9,0
  *              }
  *            }
  *          }
@@ -53,16 +54,16 @@ use Typoheads\Formhandler\Validator\ErrorCheck\MaxLength;
  *   :header-rows: 0
  *   :stub-columns: 0
  *
- *   * - **maxLength**
- *     - Sets the max string length a field value can be.
+ *   * - **characters**
+ *     - Comma separated list of characters of which can be present the value of a given field
  *   * -
  *     -
  *   * - *Mandatory*
  *     - False
  *   * - *Data Type*
- *     - Integer
+ *     - String
  *   * - *Default*
- *     - 0
+ *     - Empty String
  *
  *.. toctree::
  *   :maxdepth: 2
@@ -70,18 +71,19 @@ use Typoheads\Formhandler\Validator\ErrorCheck\MaxLength;
  *
  *Documentation:End
  */
-class MaxLengthModel extends AbstractErrorCheckModel {
-  public readonly int $maxLength;
+class ContainsOnlyModel extends AbstractErrorCheckModel {
+  /** @var string[] */
+  public readonly array $characters;
 
   /**
    * @param array<string, mixed> $settings
    */
   public function __construct(array $settings) {
-    $this->name = 'MaxLength';
-    $this->maxLength = intval($settings['maxLength'] ?? 0);
+    $this->name = 'ContainsOnly';
+    $this->characters = GeneralUtility::trimExplode(',', strval($settings['characters'] ?? ''));
   }
 
   public function class(): string {
-    return MaxLength::class;
+    return ContainsOnly::class;
   }
 }

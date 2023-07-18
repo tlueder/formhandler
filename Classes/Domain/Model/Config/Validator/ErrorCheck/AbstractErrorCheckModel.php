@@ -127,13 +127,13 @@ use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
  *        config {
  *          fields {
  *            firstname.errorChecks {
- *              minLength {
- *                model = MinLengthModel
- *                minLength = 10
+ *              lengthMin {
+ *                model = LengthMinModel
+ *                lengthMin = 10
  *              }
- *              maxLength {
- *                model = MaxLengthModel
- *                maxLength = 20
+ *              lengthMax {
+ *                model = LengthMaxModel
+ *                lengthMax = 20
  *              }
  *            }
  *          }
@@ -141,18 +141,42 @@ use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
  *      }
  *    }
  *
- *:ref:`ContainsOne`
- *  Checks if a field contains at least one of the configured values
+ *:ref:`ContainsAll`
+ *  Checks if a field contains all of the configured values.
  *
- *:ref:`MaxLength`
- *  Checks if the value of a field has less than the configured length
+ *:ref:`ContainsNone`
+ *  Checks if a field contains none of the configured values.
+ *
+ *:ref:`ContainsOne`
+ *  Checks if a field contains at least one of the configured values.
+ *
+ *:ref:`ContainsOnly`
+ *  Checks if a field contains only the configured characters.
+ *
+ *:ref:`LengthBetween`
+ *  Checks if the length of the value of a field is between or equal the configured values.
+ *
+ *:ref:`LengthMax`
+ *  Checks if the value of a field has less than the configured length.
+ *
+ *:ref:`LengthMin`
+ *  Checks if the value of a field has at least the configured length.
+ *
+ *:ref:`PregMatch`
+ *  Checks a field value using the configured perl regular expression.
  *
  *.. toctree::
  *   :maxdepth: 2
  *   :hidden:
  *
+ *   Strings/ContainsAll
+ *   Strings/ContainsNone
  *   Strings/ContainsOne
- *   Strings/MaxLength
+ *   Strings/ContainsOnly
+ *   Strings/LengthBetween
+ *   Strings/LengthMax
+ *   Strings/LengthMin
+ *   Strings/PregMatch
  *
  *Documentation:End
  */

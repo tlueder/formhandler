@@ -13,17 +13,17 @@ declare(strict_types=1);
 namespace Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
+use Typoheads\Formhandler\Validator\ErrorCheck\ContainsNone;
 
-/** Documentation:Start:ErrorChecks/Strings/ContainsOne.rst.
+/** Documentation:Start:ErrorChecks/Strings/ContainsNone.rst.
  *
- *.. _containsone:
+ *.. _containsnone:
  *
- *===========
- *ContainsOne
- *===========
+ *============
+ *ContainsNone
+ *============
  *
- *Checks if a field contains at least one of the configured values
+ *Checks if a field contains none of the configured values.
  *
  *..  code-block:: typoscript
  *
@@ -34,10 +34,10 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *        model = DefaultValidatorModel
  *        config {
  *          fields {
- *            privacy_policy.errorChecks {
- *              containsOne {
- *                model = ContainsOneModel
- *                values = Yes,Ja
+ *            message.errorChecks {
+ *              containsNone {
+ *                model = ContainsNoneModel
+ *                values = motherforking,shirtballs,badword
  *              }
  *            }
  *          }
@@ -55,7 +55,7 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *   :stub-columns: 0
  *
  *   * - **values**
- *     - Comma separated list of values of which one must be the value of a given field
+ *     - Comma separated list of values of which none must be present in the value of a given field
  *   * -
  *     -
  *   * - *Mandatory*
@@ -71,7 +71,7 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *
  *Documentation:End
  */
-class ContainsOneModel extends AbstractErrorCheckModel {
+class ContainsNoneModel extends AbstractErrorCheckModel {
   /** @var string[] */
   public readonly array $values;
 
@@ -79,11 +79,11 @@ class ContainsOneModel extends AbstractErrorCheckModel {
    * @param array<string, mixed> $settings
    */
   public function __construct(array $settings) {
-    $this->name = 'ContainsOne';
+    $this->name = 'ContainsNone';
     $this->values = GeneralUtility::trimExplode(',', strval($settings['values'] ?? ''));
   }
 
   public function class(): string {
-    return ContainsOne::class;
+    return ContainsNone::class;
   }
 }

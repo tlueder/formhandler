@@ -12,20 +12,21 @@ declare(strict_types=1);
 
 namespace Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
+use Typoheads\Formhandler\Validator\ErrorCheck\PregMatch;
 
-/** Documentation:Start:ErrorChecks/Strings/ContainsOne.rst.
+/** Documentation:Start:ErrorChecks/Strings/PregMatch.rst.
  *
- *.. _containsone:
+ *.. _pregmatch:
  *
- *===========
- *ContainsOne
- *===========
+ *=========
+ *PregMatch
+ *=========
  *
- *Checks if a field contains at least one of the configured values
+ *Checks a field value using the configured perl regular expression.
  *
- *..  code-block:: typoscript
+ *You can use this check to do existing check your own way or to make checks no built-in error check exists for.
+ *
+ *..  code-block::
  *
  *    Example Code:
  *
@@ -34,10 +35,10 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *        model = DefaultValidatorModel
  *        config {
  *          fields {
- *            privacy_policy.errorChecks {
- *              containsOne {
- *                model = ContainsOneModel
- *                values = Yes,Ja
+ *            post-code.errorChecks {
+ *              pregMatch {
+ *                model = PregMatchModel
+ *                pattern = /^DE-.*$/
  *              }
  *            }
  *          }
@@ -54,8 +55,8 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *   :header-rows: 0
  *   :stub-columns: 0
  *
- *   * - **values**
- *     - Comma separated list of values of which one must be the value of a given field
+ *   * - **pattern**
+ *     - The regex pattern to search for, as a string.
  *   * -
  *     -
  *   * - *Mandatory*
@@ -71,19 +72,18 @@ use Typoheads\Formhandler\Validator\ErrorCheck\ContainsOne;
  *
  *Documentation:End
  */
-class ContainsOneModel extends AbstractErrorCheckModel {
-  /** @var string[] */
-  public readonly array $values;
+class PregMatchModel extends AbstractErrorCheckModel {
+  public readonly string $pattern;
 
   /**
    * @param array<string, mixed> $settings
    */
   public function __construct(array $settings) {
-    $this->name = 'ContainsOne';
-    $this->values = GeneralUtility::trimExplode(',', strval($settings['values'] ?? ''));
+    $this->name = 'PregMatch';
+    $this->pattern = strval($settings['pattern'] ?? '');
   }
 
   public function class(): string {
-    return ContainsOne::class;
+    return PregMatch::class;
   }
 }
