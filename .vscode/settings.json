@@ -74,6 +74,19 @@
   "cSpell.words": ["Extbase", "Formhandler", "JAKOTA", "Typoheads"],
   "statusbar_command.commands": [
     {
+      "text": "$(discard) Reset to main",
+      "tooltip": "Reset this fork and upstream from main",
+      "id": "resetMain",
+      "name": "resetMain",
+      "command": "workbench.action.terminal.sendSequence",
+      "arguments": [
+        {
+          "text": "git checkout main && git reset --hard origin/main && git pull && git remote add upstream git@github.com:JAK0TA/formhandler.git > /dev/null 2>&1 && git fetch upstream && git rebase upstream/main && git push -f origin\u000D"
+        }
+      ],
+      "priority": 1
+    },
+    {
       "text": "$(beaker) TS",
       "tooltip": "Lint: Typoscript",
       "id": "lintTyposcript",
@@ -83,13 +96,22 @@
       "priority": -4
     },
     {
+      "text": "PHP 8.2",
+      "tooltip": "Unlink PHP and link to 8.2",
+      "id": "brewPhp8.2",
+      "name": "brewPhp8.2",
+      "command": "workbench.action.terminal.sendSequence",
+      "arguments": [{ "text": "brew unlink php && brew link php@8.2\u000D" }],
+      "priority": -5
+    },
+    {
       "text": "$(beaker) PHPStan",
       "tooltip": "Analyse code with PHPStan",
       "id": "pHPStan",
       "name": "pHPStan",
       "command": "workbench.action.terminal.sendSequence",
       "arguments": [{ "text": "php -d memory_limit=512M vendor/bin/phpstan analyse -c phpstan.neon\u000D" }],
-      "priority": -5
+      "priority": -6
     },
     {
       "text": "$(beaker) PHP CS Fixer",
@@ -98,7 +120,7 @@
       "name": "pHPCsFixer",
       "command": "workbench.action.terminal.sendSequence",
       "arguments": [{ "text": "./vendor/bin/php-cs-fixer fix $(pwd) --dry-run --diff --config=\"./.vscode/.php-cs-fixer.php\" --using-cache no\u000D" }],
-      "priority": -6
+      "priority": -7
     },
     {
       "text": "$(git-branch) $(trash)",
@@ -107,7 +129,7 @@
       "name": "gitCleanUp",
       "command": "workbench.action.terminal.sendSequence",
       "arguments": [{ "text": "git for-each-ref --format '%(refname:short)' refs/heads | grep -v \"master\\|main\\|develop\\|stage\" | grep -v $(git branch --show-current) | xargs git branch -D\u000D" }],
-      "priority": -7
+      "priority": -8
     },
     {
       "text": "$(book) Build Documentation",
@@ -116,7 +138,7 @@
       "name": "gitCleanUp",
       "command": "workbench.action.terminal.sendSequence",
       "arguments": [{ "text": "./vendor/bin/documentation-builder .documentation/documentation.json\u000D" }],
-      "priority": -8
+      "priority": -9
     }
   ]
 }
