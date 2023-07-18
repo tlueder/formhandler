@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of TYPO3 CMS-based extension "Formhandler" by JAKOTA.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ */
+
 namespace Typoheads\Formhandler\Domain\Model\Config\Debugger;
 
 use Typoheads\Formhandler\Debugger\PrintToScreenDebugger;
@@ -37,6 +45,7 @@ use Typoheads\Formhandler\Definitions\Severity;
  *          model = PrintToScreenDebuggerModel
  *          config {
  *            active = true
+ *            maxDepth = 10
  *            severityWrap {
  *              1 = <span class="level-info">|</span>
  *              2 = <span class="level-warning">|</span>
@@ -102,7 +111,7 @@ use Typoheads\Formhandler\Definitions\Severity;
  *   * - *Data Type*
  *     - String
  *   * - *Default*
- *     - <div style="font-weight:bold;">|</div>
+ *     - <div style="font-weight:bold;">|</div>
  *
  *.. list-table::
  *   :align: left
@@ -120,7 +129,7 @@ use Typoheads\Formhandler\Definitions\Severity;
  *   * - *Data Type*
  *     - String
  *   * - *Default*
- *     - <h2 style="background:#333; color:#cdcdcd; height:23px; padding:10px 7px 7px 7px; margin:0;">|</h2>
+ *     - <h2 style="background:#333; color:#cdcdcd; height:23px; padding:10px 7px 7px 7px; margin:0;">|</h2>
  *
  *.. list-table::
  *   :align: left
@@ -138,7 +147,7 @@ use Typoheads\Formhandler\Definitions\Severity;
  *   * - *Data Type*
  *     - String
  *   * - *Default*
- *     - <div style="border:1px solid #ccc; padding:7px; background:#dedede;">|</div>
+ *     - <div style="border:1px solid #ccc; padding:7px; background:#dedede;">|</div>
  *
  *.. list-table::
  *   :align: left

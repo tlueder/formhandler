@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of TYPO3 CMS-based extension "Formhandler" by JAKOTA.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ */
+
 namespace Typoheads\Formhandler\Controller;
 
 use Psr\Http\Message\ResponseInterface;
@@ -112,9 +120,14 @@ use Typoheads\Formhandler\Utility\Utility;
  *General Options
  *===============
  *
+ *:ref:`Settings`
+ *  All forms are build via TypoScript as predefined forms.
  *
- *All forms are build via TypoScript as predefined forms.
+ *:ref:`Predefined-Form`
+ *  Predefine form settings and make them selectable in plugin record.
  *
+ *:ref:`Step`
+ *  Multistep forms settings
  *
  *.. toctree::
  *   :maxdepth: 2
@@ -127,8 +140,6 @@ use Typoheads\Formhandler\Utility\Utility;
  *Documentation:End
  */
 /** Documentation:Start:GeneralOptions/Settings.rst.
- *
- *.. include:: /Includes.rst.txt
  *
  *.. _settings:
  *

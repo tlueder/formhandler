@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of TYPO3 CMS-based extension "Formhandler" by JAKOTA.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ */
+
 namespace Typoheads\Formhandler\Domain\Model\Config\Interceptor;
 
 use Typoheads\Formhandler\Interceptor\AbstractInterceptor;
@@ -45,9 +53,9 @@ use Typoheads\Formhandler\Interceptor\AbstractInterceptor;
  *
  *.. _initinterceptors:
  *
- *================
- *InitInterceptors
- *================
+ *=================
+ *Init Interceptors
+ *=================
  *
  *The init interceptors are called before every time the form is displayed.
  *
@@ -71,9 +79,9 @@ use Typoheads\Formhandler\Interceptor\AbstractInterceptor;
  *
  *.. _saveinterceptors:
  *
- *================
- *SaveInterceptors
- *================
+ *=================
+ *Save Interceptors
+ *=================
  *
  *The save interceptors are called after all steps are validated and before the loggers and finishers are called.
  *

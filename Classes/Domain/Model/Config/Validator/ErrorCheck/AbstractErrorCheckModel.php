@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of TYPO3 CMS-based extension "Formhandler" by JAKOTA.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ */
+
 namespace Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck;
 
 use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
@@ -71,15 +79,31 @@ use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
  *:ref:`Email`
  *  Checks if a field contains a valid email and if a MX record exists for the domain of an email address.
  *
+ *:ref:`Equals`
+ *  Checks if a field equals the configured value.
+ *
+ *:ref:`EqualsField`
+ *  Checks if a field value equals another field value.
+ *
+ *:ref:`NotEqualsField`
+ *  Checks if a field value does not equals another field value.
+ *
  *:ref:`Required`
  *  Checks if a field is filled in
+ *
+ *:ref:`Url`
+ *  Checks if a field contains a valid url.
  *
  *.. toctree::
  *   :maxdepth: 2
  *   :hidden:
  *
  *   General/Email
+ *   General/Equals
+ *   General/EqualsField
+ *   General/NotEqualsField
  *   General/Required
+ *   General/Url
  *
  *Documentation:End
  */

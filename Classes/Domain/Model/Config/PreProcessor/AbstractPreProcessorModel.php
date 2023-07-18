@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of TYPO3 CMS-based extension "Formhandler" by JAKOTA.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ */
+
 namespace Typoheads\Formhandler\Domain\Model\Config\PreProcessor;
 
 use Typoheads\Formhandler\PreProcessor\AbstractPreProcessor;
@@ -10,9 +18,9 @@ use Typoheads\Formhandler\PreProcessor\AbstractPreProcessor;
  *
  *.. _preprocessors:
  *
- *=============
- *PreProcessors
- *=============
+ *==============
+ *Pre Processors
+ *==============
  *
  *You can enter as many :ref:`PreProcessors` as you like. Each entry requires a model name of the :ref:`PreProcessor <PreProcessors>`. Optionally you can enter specific configuration for the :ref:`PreProcessor <PreProcessors>` in the config section. The :ref:`PreProcessors` are only called the first time the form is shown.
  *
