@@ -1,0 +1,57 @@
+
+.. _numbers:
+
+=======
+Numbers
+=======
+
+If you want to perform error checks on numbers, e.g. if a field value is a valid integer, these checks are right for you.
+
+..  code-block:: typoscript
+
+    Example Code:
+
+    validators {
+      DefaultValidator {
+        model = DefaultValidatorModel
+        config {
+          fields {
+            age.errorChecks {
+              integer {
+                model = IntegerModel
+              }
+              valueBetween {
+                model = ValueBetweenModel
+                valueMax = 100
+                valueMin = 18
+              }
+            }
+          }
+        }
+      }
+    }
+
+:ref:`Float`
+  Checks if a field contains a valid float value.
+
+:ref:`Integer`
+  Checks if a field contains a valid integer value.
+
+:ref:`ValueBetween`
+  Checks if the value of a field is between or equal the configured values.
+
+:ref:`ValueMax`
+  Checks if the value of a field is less or equal than the configured value.
+
+:ref:`ValueMin`
+  Checks if the value of a field is at least the configured value.
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   Numbers/Float
+   Numbers/Integer
+   Numbers/ValueBetween
+   Numbers/ValueMax
+   Numbers/ValueMin
