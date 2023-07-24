@@ -360,37 +360,52 @@ class FormController extends ActionController {
 
     $this->initInterceptors();
 
+    // TODO: Add AjaxHandler
+
     $this->initJsonResponse();
 
-    if ($this->formSubmitted() && $this->validators()) {
-      // Check for last step before changing step count
-      $isLast = $this->formStepIsLast();
+    if ($this->formSubmitted()) {
+      if ($this->validators()) {
+        // Check for last step before changing step count
+        $isLast = $this->formStepIsLast();
 
-      $this->formStepChange();
+        $this->formStepChange();
 
-      if ($isLast) {
-        $this->saveInterceptors();
-        $this->loggers();
-        if (($response = $this->finishers()) !== null) {
+        if ($isLast) {
+          $this->saveInterceptors();
+          $this->loggers();
+
+          $response = $this->finishers();
+
+          // Reset form session
+          $this->formConfig->session->reset()->start();
+
+          if (null !== $response) {
+            if ('json' == $this->formConfig->responseType) {
+              $this->jsonResponse->success = true;
+
+              // TODO: Use new model to check for Response type and Finisher name so headless knows which Finisher returned
+              if ($response instanceof RedirectResponse) {
+                $this->jsonResponse->redirectPage = $response->getHeaderLine('location');
+                $this->jsonResponse->redirectCode = $response->getStatusCode();
+              }
+
+              return $this->jsonResponse(json_encode($this->jsonResponse) ?: '{}');
+            }
+
+            return $response;
+          }
           if ('json' == $this->formConfig->responseType) {
             $this->jsonResponse->success = true;
-            // TODO: Use new model to check for Response type and Finisher name so headless knows which Finisher returned
-            if ($response instanceof RedirectResponse) {
-              $this->jsonResponse->redirectPage = $response->getHeaderLine('location');
-              $this->jsonResponse->redirectCode = $response->getStatusCode();
-            }
 
             return $this->jsonResponse(json_encode($this->jsonResponse) ?: '{}');
           }
-
-          return $response;
-        }
-        if ('json' == $this->formConfig->responseType) {
-          $this->jsonResponse->success = true;
-
-          return $this->jsonResponse(json_encode($this->jsonResponse) ?: '{}');
         }
       }
+
+      return new RedirectResponse(
+        '#'.$this->formConfig->formId
+      );
     }
 
     $this->prepareFormSets();
@@ -463,40 +478,40 @@ class FormController extends ActionController {
   }
 
   private function formSession(): void {
-    $firstStart = false;
-    if (empty($this->formConfig->randomId)) {
-      $firstStart = true;
-      $this->formConfig->randomId = GeneralUtility::makeInstance(Utility::class)::generateRandomId($this->formConfig);
-    }
-    $this->formConfig->debugMessage(
-      key: 'Session first start',
-      data: $firstStart,
-    );
-
     $this->formConfig->session = GeneralUtility::makeInstance(Typo3Session::class)
       ->init($this->formConfig)
-      ->start($this->formConfig->randomId)
+      ->start()
     ;
+
+    $this->formConfig->debugMessage(
+      key: 'Session first start',
+      data: $this->formConfig->firstAccess,
+    );
 
     if ($this->formConfig->session->exists()) {
       $selectsOptions = $this->formConfig->session->get('selectsOptions');
       if (is_array($selectsOptions)) {
         $this->formConfig->selectsOptions = $selectsOptions;
       }
+
+      $fieldsErrors = $this->formConfig->session->get('fieldsErrors');
+      if (is_array($fieldsErrors)) {
+        $this->formConfig->fieldsErrors = $fieldsErrors;
+      }
+
       $this->formConfig->step = intval(
         (
           (array) ($this->parsedBody[FormhandlerExtensionConfig::EXTENSION_KEY] ?? [])
         )['step'] ??
         $this->formConfig->session->get('step') ?: 1
       );
+
       $this->formConfig->formValues = (array) ($this->formConfig->session->get('formValues') ?: []);
     } else {
       // Form session is invalid or first form access reset form
-      if (!$firstStart) {
+      if (!$this->formConfig->firstAccess) {
         // Form session is invalid create new one
-        $randomId = GeneralUtility::makeInstance(Utility::class)::generateRandomId($this->formConfig);
-        $this->formConfig->session->reset()->start($randomId);
-        $this->formConfig->randomId = $randomId;
+        $this->formConfig->session->reset()->start();
       }
 
       $this->formConfig->step = 1;
@@ -533,6 +548,8 @@ class FormController extends ActionController {
     } else {
       $this->formConfig->step = !$this->formStepIsLast() ? $this->formConfig->step + 1 : $this->formConfig->step;
     }
+
+    $this->formConfig->session->set('step', $this->formConfig->step);
   }
 
   private function formStepIsLast(): bool {
@@ -624,11 +641,15 @@ class FormController extends ActionController {
 
   private function validators(): bool {
     $isValid = true;
+    $this->formConfig->fieldsErrors = [];
+
     foreach ($this->formConfig->steps[$this->formConfig->step]->validators as $validator) {
       if (!GeneralUtility::makeInstance($validator->class())->process($this->formConfig, $validator)) {
         $isValid = false;
       }
     }
+
+    $this->formConfig->session->set('fieldsErrors', $this->formConfig->fieldsErrors);
 
     return $isValid;
   }
