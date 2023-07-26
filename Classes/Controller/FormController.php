@@ -129,6 +129,9 @@ use Typoheads\Formhandler\Utility\Utility;
  *:ref:`Predefined-Form`
  *  Predefine form settings and make them selectable in plugin record.
  *
+ *:ref:`FileUploadSettings`
+ *  Settings to handle file uploads.
+ *
  *:ref:`Step`
  *  Multistep forms settings
  *
@@ -138,7 +141,7 @@ use Typoheads\Formhandler\Utility\Utility;
  *
  *   Settings
  *   PredefinedForm
- *   FileUpload
+ *   FileUploadSettings
  *   Step
  *
  *Documentation:End
@@ -310,6 +313,9 @@ use Typoheads\Formhandler\Utility\Utility;
  *Documentation:End
  */
 class FormController extends ActionController {
+  /** @var array<string, string> */
+  protected $fieldsFileTypes = [];
+
   /** @var array<string, bool> */
   protected $fieldsRequired = [];
 
@@ -367,6 +373,8 @@ class FormController extends ActionController {
     $this->formSession();
 
     if (null !== ($response = $this->processFileRemoval())) {
+      $this->validators();
+
       return $response;
     }
 
@@ -441,7 +449,7 @@ class FormController extends ActionController {
 
     foreach ($this->formConfig->steps[$this->formConfig->step]->validators as $validator) {
       foreach ($validator->fields as $field) {
-        $this->prepareFieldsRequired('['.$this->formConfig->step.']', $field);
+        $this->prepareFieldsFileTypesAndRequired('['.$this->formConfig->step.']', $field);
       }
     }
 
@@ -452,8 +460,9 @@ class FormController extends ActionController {
       [
         'debugOutput' => $debugOutput,
         'extensionKey' => FormhandlerExtensionConfig::EXTENSION_KEY,
-        'fieldsRequired' => $this->fieldsRequired,
         'fieldsErrors' => $this->formConfig->fieldsErrors,
+        'fieldsFileTypes' => $this->fieldsFileTypes,
+        'fieldsRequired' => $this->fieldsRequired,
         'fieldSets' => $this->formConfig->fieldSets,
         'fileUpload' => $this->formConfig->fileUpload,
         'formId' => $this->formConfig->formId,
@@ -642,16 +651,18 @@ class FormController extends ActionController {
     );
   }
 
-  private function prepareFieldsRequired(string $fieldNamePath, FieldModel $field): void {
+  private function prepareFieldsFileTypesAndRequired(string $fieldNamePath, FieldModel $field): void {
     $fieldNamePath .= '['.$field->name.']';
     foreach ($field->errorChecks as $errorCheck) {
-      // TODO: Maybe add $errorCheck->isRequired()?
-      if ('Required' == $errorCheck->name) {
+      if ($errorCheck->isRequired()) {
         $this->fieldsRequired[$fieldNamePath] = true;
+      }
+      if (!empty($fileTypes = $errorCheck->fileTypes())) {
+        $this->fieldsFileTypes[$fieldNamePath] = $fileTypes;
       }
     }
     foreach ($field->fields as $field) {
-      $this->prepareFieldsRequired($fieldNamePath, $field);
+      $this->prepareFieldsFileTypesAndRequired($fieldNamePath, $field);
     }
   }
 

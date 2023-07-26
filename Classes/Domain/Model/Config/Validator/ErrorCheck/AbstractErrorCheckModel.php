@@ -44,6 +44,9 @@ use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
  *:ref:`Date & Time <DateTime>`
  *  Using these error checks you can force the user to enter a valid date or time. You can even check for a valid date range.
  *
+ *:ref:`FileUpload`
+ *  These are all available error checks dealing with file uploads. You can restrict allowed file types, set min and max uploadable files for one upload field and more.
+ *
  *:ref:`Numbers`
  *  If you want to perform error checks on numbers, e.g. if a field value is a valid integer, these checks are right for you.
  *
@@ -58,6 +61,7 @@ use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
  *   Arrays
  *   Database
  *   DateTime
+ *   FileUpload
  *   Numbers
  *   Strings
  *
@@ -191,6 +195,84 @@ use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
  *
  *Documentation:End
  */
+/** Documentation:Start:ErrorChecks/FileUpload.rst.
+ *
+ *.. _fileupload:
+ *
+ *===========
+ *File Upload
+ *===========
+ *
+ *These are all available error checks dealing with file uploads. You can restrict allowed file types, set min and max uploadable files for one upload field and more.
+ *
+ *:ref:`FileCountMax`
+ *  Checks if the files uploaded from a field are less than or equal the configured value.
+ *
+ *:ref:`FileCountMin`
+ *  Checks if the files uploaded from a field are more than or equal the configured value.
+ *
+ *:ref:`FileRequired`
+ *  Checks if a file has been uploaded from this field.
+ *
+ *:ref:`FileSizeMax`
+ *  Checks if the size of an uploaded file is less or equal than the configured value.
+ *
+ *:ref:`FileSizeMin`
+ *  Checks if the size of an uploaded file is at least the configured value.
+ *
+ *:ref:`FileTypes`
+ *  Checks if the file type of an uploaded file is allowed.
+ *
+ *.. toctree::
+ *   :maxdepth: 2
+ *   :hidden:
+ *
+ *   FileUpload/FileCountMax
+ *   FileUpload/FileCountMin
+ *   FileUpload/FileRequired
+ *   FileUpload/FileSizeMax
+ *   FileUpload/FileSizeMin
+ *   FileUpload/FileTypes
+ *
+ *Documentation:End
+ */
+/** Documentation:Start:ErrorChecks/Numbers.rst.
+ *
+ *.. _numbers:
+ *
+ *=======
+ *Numbers
+ *=======
+ *
+ *If you want to perform error checks on numbers, e.g. if a field value is a valid integer, these checks are right for you.
+ *
+ *:ref:`Float`
+ *  Checks if a field contains a valid float value.
+ *
+ *:ref:`Integer`
+ *  Checks if a field contains a valid integer value.
+ *
+ *:ref:`ValueMax`
+ *  Checks if the value of a field is less or equal than the configured value.
+ *
+ *:ref:`ValueMin`
+ *  Checks if the value of a field is at least the configured value.
+ *
+ *:ref:`ValueRange`
+ *  Checks if the value of a field is between or equal the configured values.
+ *
+ *.. toctree::
+ *   :maxdepth: 2
+ *   :hidden:
+ *
+ *   Numbers/Float
+ *   Numbers/Integer
+ *   Numbers/ValueMax
+ *   Numbers/ValueMin
+ *   Numbers/ValueRange
+ *
+ *Documentation:End
+ */
 /** Documentation:Start:ErrorChecks/Strings.rst.
  *
  *.. _strings:
@@ -240,45 +322,12 @@ use Typoheads\Formhandler\Validator\ErrorCheck\AbstractErrorCheck;
  *
  *Documentation:End
  */
-/** Documentation:Start:ErrorChecks/Numbers.rst.
- *
- *.. _numbers:
- *
- *=======
- *Numbers
- *=======
- *
- *If you want to perform error checks on numbers, e.g. if a field value is a valid integer, these checks are right for you.
- *
- *:ref:`Float`
- *  Checks if a field contains a valid float value.
- *
- *:ref:`Integer`
- *  Checks if a field contains a valid integer value.
- *
- *:ref:`ValueMax`
- *  Checks if the value of a field is less or equal than the configured value.
- *
- *:ref:`ValueMin`
- *  Checks if the value of a field is at least the configured value.
- *
- *:ref:`ValueRange`
- *  Checks if the value of a field is between or equal the configured values.
- *
- *.. toctree::
- *   :maxdepth: 2
- *   :hidden:
- *
- *   Numbers/Float
- *   Numbers/Integer
- *   Numbers/ValueMax
- *   Numbers/ValueMin
- *   Numbers/ValueRange
- *
- *Documentation:End
- */
 abstract class AbstractErrorCheckModel {
-  public string $name;
+  protected string $fileTypes = '';
+
+  protected bool $isRequired = false;
+
+  protected string $name;
 
   /**
    * @param array<string, mixed> $settings
@@ -289,4 +338,16 @@ abstract class AbstractErrorCheckModel {
    * @return class-string<AbstractErrorCheck>
    */
   abstract public function class(): string;
+
+  public function fileTypes(): string {
+    return $this->fileTypes;
+  }
+
+  public function isRequired(): bool {
+    return $this->isRequired;
+  }
+
+  public function name(): string {
+    return $this->name;
+  }
 }

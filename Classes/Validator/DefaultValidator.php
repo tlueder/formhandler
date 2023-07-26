@@ -54,7 +54,7 @@ class DefaultValidator extends AbstractValidator {
       foreach ($field->errorChecks as $errorCheck) {
         if (
           !in_array($errorCheck->class(), $formConfig->disableErrorCheckFields[$fieldNamePathDots] ?? [])
-          && !GeneralUtility::makeInstance($errorCheck->class())->isValid($formConfig, $errorCheck, $formValue ?? '')
+          && !GeneralUtility::makeInstance($errorCheck->class())->isValid($formConfig, $errorCheck, $fieldNamePathBrackets, $fieldNamePathDots, $formValue ?? '')
         ) {
           $isValid = false;
           if (
@@ -70,7 +70,7 @@ class DefaultValidator extends AbstractValidator {
             continue;
           }
 
-          $formConfig->fieldsErrors[$fieldNamePathBrackets][] = $errorCheck->name;
+          $formConfig->fieldsErrors[$fieldNamePathBrackets][] = $errorCheck->name();
         }
       }
       if (!empty($field->fields)) {

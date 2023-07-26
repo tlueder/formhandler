@@ -17,20 +17,21 @@ use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\AbstractError
 use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\ValueMinModel;
 
 class ValueMin extends AbstractErrorCheck {
-  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, mixed $value): bool {
+  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, string $fieldNamePathBrackets, string $fieldNamePathDots, mixed $value): bool {
     if (!$errorCheckConfig instanceof ValueMinModel) {
       return false;
     }
 
-    $valueTemp = filter_var($value ?? 0, FILTER_VALIDATE_INT);
-    if (false === $valueTemp) {
-      $valueTemp = filter_var($value ?? 0, FILTER_VALIDATE_FLOAT) ?: 0;
+    if (empty($value)) {
+      return true;
     }
 
-    if (
-      $errorCheckConfig->valueMin > 0
-      && $valueTemp >= $errorCheckConfig->valueMin
-    ) {
+    $valueTemp = filter_var($value, FILTER_VALIDATE_INT);
+    if (false === $valueTemp) {
+      $valueTemp = filter_var($value, FILTER_VALIDATE_FLOAT) ?: 0;
+    }
+
+    if ($valueTemp >= $errorCheckConfig->valueMin) {
       return true;
     }
 

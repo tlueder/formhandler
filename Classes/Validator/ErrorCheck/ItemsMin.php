@@ -17,13 +17,16 @@ use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\AbstractError
 use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\ItemsMinModel;
 
 class ItemsMin extends AbstractErrorCheck {
-  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, mixed $value): bool {
+  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, string $fieldNamePathBrackets, string $fieldNamePathDots, mixed $value): bool {
     if (!$errorCheckConfig instanceof ItemsMinModel) {
       return false;
     }
 
+    if (empty($value)) {
+      return true;
+    }
+
     if (is_array($value)
-      && $errorCheckConfig->itemsMin > 0
       && count($value) >= $errorCheckConfig->itemsMin
     ) {
       return true;

@@ -17,16 +17,18 @@ use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\AbstractError
 use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\ItemsRangeModel;
 
 class ItemsRange extends AbstractErrorCheck {
-  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, mixed $value): bool {
+  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, string $fieldNamePathBrackets, string $fieldNamePathDots, mixed $value): bool {
     if (!$errorCheckConfig instanceof ItemsRangeModel) {
       return false;
     }
 
+    if (empty($value)) {
+      return true;
+    }
+
     if (is_array($value)) {
       $valueCount = count($value);
-      if ($errorCheckConfig->itemsMax > 0
-        && $valueCount <= $errorCheckConfig->itemsMax
-        && $errorCheckConfig->itemsMin > 0
+      if ($valueCount <= $errorCheckConfig->itemsMax
         && $valueCount >= $errorCheckConfig->itemsMin
       ) {
         return true;

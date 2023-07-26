@@ -84,22 +84,59 @@ plugin.tx_formhandler_form.settings.predefinedForms.devExample {
           config {
             messageLimit = 1
             messageLimits {
+              1.customer.screenshot1 = 2
               1.customer.email = 2
             }
             fields {
               customer.fields {
+                screenshot1.errorChecks {
+                  fileTypes {
+                    model = FileTypes
+                    fileTypes = .jpg
+                  }
+                  fileCountMax {
+                    model = FileCountMax
+                    fileCountMax = 5
+                  }
+                  fileCountMin {
+                    model = FileCountMin
+                    fileCountMin = 2
+                  }
+                }
+                screenshot2.errorChecks {
+                  fileTypes {
+                    model = FileTypes
+                    fileTypes = image/*
+                  }
+                  fileCountMax {
+                    model = FileCountMax
+                    fileCountMax = 1
+                  }
+                  fileRequired {
+                    model = FileRequired
+                  }
+                  fileSizeMax {
+                    model = FileSizeMax
+                    fileSizeMax = 2097152
+                  }
+                  fileSizeMin {
+                    model = FileSizeMin
+                    fileSizeMin = 1048576
+                  }
+                }
                 salutation.errorChecks {
                   required {
                     model = Required
                   }
                 }
                 firstname.errorChecks {
-                  required {
-                    model = Required
-                  }
                   lengthMax {
                     model = LengthMax
                     lengthMax = 20
+                  }
+                  lengthMin {
+                    model = LengthMin
+                    lengthMin = 10
                   }
                 }
                 lastname.errorChecks {

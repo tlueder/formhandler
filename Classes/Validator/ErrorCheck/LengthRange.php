@@ -17,17 +17,18 @@ use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\AbstractError
 use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\LengthRangeModel;
 
 class LengthRange extends AbstractErrorCheck {
-  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, mixed $value): bool {
+  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, string $fieldNamePathBrackets, string $fieldNamePathDots, mixed $value): bool {
     if (!$errorCheckConfig instanceof LengthRangeModel) {
       return false;
     }
 
+    if (empty($value)) {
+      return true;
+    }
+
     if (is_string($value)
-        && mb_strlen(trim($value), 'utf-8') > 0
-        && $errorCheckConfig->lengthMax > 0
-        && mb_strlen(trim($value), 'utf-8') <= $errorCheckConfig->lengthMax
-        && $errorCheckConfig->lengthMin > 0
-        && mb_strlen(trim($value), 'utf-8') >= $errorCheckConfig->lengthMin
+      && mb_strlen(trim($value), 'utf-8') <= $errorCheckConfig->lengthMax
+      && mb_strlen(trim($value), 'utf-8') >= $errorCheckConfig->lengthMin
     ) {
       return true;
     }

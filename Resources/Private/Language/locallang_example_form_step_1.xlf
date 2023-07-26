@@ -4,6 +4,32 @@
   <file source-language="en" datatype="plaintext" original="EXT:formhandler/Resources/Private/Language/locallang_example_form.xlf" date="2023-06-22T11:48:40Z" product-name="formhandler">
     <header />
     <body>
+      <trans-unit id="error_1.customer.screenshot1_FileCountMax" resname="error_1.customer.screenshot1_FileCountMax">
+        <source>Please remove files, max file count mismatch.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.screenshot1_FileCountMin" resname="error_1.customer.screenshot1_FileCountMin">
+        <source>Please upload files, min file count mismatch.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.screenshot1_FileTypes" resname="error_1.customer.screenshot1_FileTypes">
+        <source>Allowed file type mismatch.</source>
+      </trans-unit>
+
+      <trans-unit id="error_1.customer.screenshot2_FileCountMax" resname="error_1.customer.screenshot2_FileCountMax">
+        <source>Please remove files, max file count mismatch.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.screenshot2_FileRequired" resname="error_1.customer.screenshot2_FileRequired">
+        <source>You forgot to upload a file.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.screenshot2_FileSizeMax" resname="error_1.customer.screenshot2_FileSizeMax">
+        <source>You uploaded a file bigger than the allowed max file size.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.screenshot2_FileSizeMin" resname="error_1.customer.screenshot2_FileSizeMin">
+        <source>You uploaded a file smaller than the allowed min file size.</source>
+      </trans-unit>
+      <trans-unit id="error_1.customer.screenshot2_FileTypes" resname="error_1.customer.screenshot2_FileTypes">
+        <source>Allowed file type mismatch.</source>
+      </trans-unit>
+
       <trans-unit id="1.customer.salutation" resname="1.customer.salutation">
         <source>Salutation</source>
       </trans-unit>

@@ -17,13 +17,16 @@ use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\AbstractError
 use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\LengthMinModel;
 
 class LengthMin extends AbstractErrorCheck {
-  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, mixed $value): bool {
+  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, string $fieldNamePathBrackets, string $fieldNamePathDots, mixed $value): bool {
     if (!$errorCheckConfig instanceof LengthMinModel) {
       return false;
     }
 
+    if (empty($value)) {
+      return true;
+    }
+
     if (is_string($value)
-        && $errorCheckConfig->lengthMin > 0
         && mb_strlen(trim($value), 'utf-8') >= $errorCheckConfig->lengthMin
     ) {
       return true;

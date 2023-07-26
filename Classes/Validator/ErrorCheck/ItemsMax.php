@@ -17,13 +17,16 @@ use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\AbstractError
 use Typoheads\Formhandler\Domain\Model\Config\Validator\ErrorCheck\ItemsMaxModel;
 
 class ItemsMax extends AbstractErrorCheck {
-  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, mixed $value): bool {
+  public function isValid(FormModel &$formConfig, AbstractErrorCheckModel &$errorCheckConfig, string $fieldNamePathBrackets, string $fieldNamePathDots, mixed $value): bool {
     if (!$errorCheckConfig instanceof ItemsMaxModel) {
       return false;
     }
 
+    if (empty($value)) {
+      return true;
+    }
+
     if (is_array($value)
-      && $errorCheckConfig->itemsMax > 0
       && count($value) <= $errorCheckConfig->itemsMax
     ) {
       return true;
