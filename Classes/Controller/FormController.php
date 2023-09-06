@@ -561,6 +561,7 @@ class FormController extends ActionController {
       $this->formConfig->step = 1;
       $this->formConfig->formValues = [];
 
+      $this->parsedBody = [];
       $this->parsedBody[FormhandlerExtensionConfig::EXTENSION_KEY] = [];
       $this->parsedBody[FormhandlerExtensionConfig::EXTENSION_KEY]['submitted'] = false;
       $this->parsedBody[FormhandlerExtensionConfig::EXTENSION_KEY]['randomId'] = $this->formConfig->randomId;
