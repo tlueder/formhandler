@@ -96,9 +96,9 @@ class Typo3Session extends AbstractSession {
     }
 
     $this->randomIdIdentifier = FormhandlerExtensionConfig::EXTENSION_PLUGIN_SIGNATURE.'_'.$this->formConfig->formId.'_randomId';
+    $randomId = $this->cache->get($this->randomIdIdentifier);
 
     if (empty($this->formConfig->randomId)) {
-      $randomId = $this->cache->get($this->randomIdIdentifier);
       if (is_string($randomId) && !empty($randomId)) {
         $this->formConfig->firstAccess = false;
         $this->formConfig->randomId = $randomId;
@@ -107,7 +107,12 @@ class Typo3Session extends AbstractSession {
         $this->cache->set($this->randomIdIdentifier, $this->formConfig->randomId, [], $this->getLifetime());
       }
     } else {
-      $this->formConfig->firstAccess = false;
+      if (is_string($randomId) && !empty($randomId) && $randomId == $this->formConfig->randomId) {
+        $this->formConfig->firstAccess = false;
+      } else {
+        $this->formConfig->randomId = GeneralUtility::makeInstance(Utility::class)::generateRandomId($this->formConfig);
+        $this->cache->set($this->randomIdIdentifier, $this->formConfig->randomId, [], $this->getLifetime());
+      }
     }
 
     $this->formConfig->debugMessage(
